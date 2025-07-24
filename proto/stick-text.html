@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>粘性标题 + 多图滚动切换</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                font-family: serif;
+                background: #111;
+                color: #fff;
+            }
+            .title {
+                position: sticky;
+                top: 0;
+                background: #111;
+                font-size: 40px;
+                padding: 20px;
+                z-index: 100;
+            }
+            .photo {
+                height: 100vh;
+                background-size: cover;
+                background-position: center;
+                opacity: 0.2;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="title">摄影 · 记录时间的方式</div>
+
+        <div class="photo" style="background-image: url(&quot;https://picsum.photos/id/1021/1200/800&quot;)"></div>
+        <div class="photo" style="background-image: url(&quot;https://picsum.photos/id/1025/1200/800&quot;)"></div>
+        <div class="photo" style="background-image: url(&quot;https://picsum.photos/id/1035/1200/800&quot;)"></div>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.utils.toArray(".photo").forEach((photo) => {
+                gsap.to(photo, {
+                    opacity: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: photo,
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: true,
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>

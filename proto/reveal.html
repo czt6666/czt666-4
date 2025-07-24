@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>图文错位 Reveal</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: sans-serif;
+            }
+            .container {
+                display: flex;
+                height: 500vh;
+                position: relative;
+            }
+
+            .text {
+                width: 40%;
+                padding: 2rem;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+            }
+
+            .images {
+                width: 60%;
+            }
+
+            .images img {
+                width: 100%;
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="text">
+                <h2>Scroll to Reveal</h2>
+            </div>
+            <div class="images">
+                <img src="https://picsum.photos/id/1015/800/600" />
+                <img src="https://picsum.photos/id/1025/800/600" />
+                <img src="https://picsum.photos/id/1035/800/600" />
+                <img src="https://picsum.photos/id/1045/800/600" />
+                <img src="https://picsum.photos/id/1055/800/600" />
+            </div>
+        </div>
+        <div class="container">
+            <div class="images">
+                <img src="https://picsum.photos/id/1015/800/600" />
+                <img src="https://picsum.photos/id/1025/800/600" />
+                <img src="https://picsum.photos/id/1035/800/600" />
+                <img src="https://picsum.photos/id/1045/800/600" />
+                <img src="https://picsum.photos/id/1055/800/600" />
+            </div>
+            <div class="text">
+                <h2>Scroll to Reveal</h2>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+        <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            const imgs = document.querySelectorAll(".images img");
+            imgs.forEach((img, i) => {
+                gsap.to(img, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: img,
+                        start: "top 80%",
+                        end: "bottom 60%",
+                        scrub: true,
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>

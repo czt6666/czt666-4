@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Waterfall Text</title>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                font-family: sans-serif;
+                background: black;
+                color: white;
+            }
+            .line {
+                font-size: 3em;
+                opacity: 0;
+                transform: translateY(-100px);
+                margin: 60px 0;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="spacer" style="height: 100vh"></div>
+
+        <div class="line">你好</div>
+        <div class="line">欢迎来到</div>
+        <div class="line">灵感的瀑布</div>
+        <div class="line">每一行都流动</div>
+        <div class="line">随着滚动逐渐坠落</div>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.utils.toArray(".line").forEach((line, i) => {
+                gsap.to(line, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: line,
+                        start: "top 80%",
+                        toggleActions: "play none none reverse",
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>
