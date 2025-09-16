@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>摄影 · 镜头之外</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap" rel="stylesheet" />
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: "Instrument Serif", serif;
+                background: #0c0c0c;
+                overflow: hidden;
+                cursor: none;
+            }
+
+            .hero {
+                position: relative;
+                width: 100%;
+                height: 100vh;
+                background: url("https://images.unsplash.com/photo-1520283742923-9a9e4c63b0eb?auto=format&fit=crop&w=1950&q=80")
+                    center/cover no-repeat;
+                filter: brightness(0.5) contrast(1.1);
+                z-index: 1;
+            }
+
+            .light-overlay {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.05), transparent 40%),
+                    radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.04), transparent 60%);
+                animation: lightMove 8s infinite ease-in-out alternate;
+            }
+
+            @keyframes lightMove {
+                0% {
+                    background-position: 30% 40%, 70% 70%;
+                }
+                100% {
+                    background-position: 60% 30%, 40% 80%;
+                }
+            }
+
+            .glass-card {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 600px;
+                max-width: 90vw;
+                padding: 50px;
+                border-radius: 24px;
+                background: rgba(255, 255, 255, 0.08);
+                backdrop-filter: blur(18px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                text-align: center;
+                color: #fff;
+                z-index: 2;
+                opacity: 0;
+                animation: fadeInCard 1.5s ease forwards 0.8s;
+            }
+
+            @keyframes fadeInCard {
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1.02);
+                }
+            }
+
+            .glass-card h1 {
+                font-size: 48px;
+                margin-bottom: 16px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+            .glass-card p {
+                font-size: 18px;
+                opacity: 0.85;
+                margin-bottom: 32px;
+            }
+
+            .btn {
+                display: inline-block;
+                padding: 12px 24px;
+                border-radius: 24px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                background: rgba(255, 255, 255, 0.05);
+                text-decoration: none;
+                transition: all 0.4s ease;
+                font-size: 16px;
+                backdrop-filter: blur(8px);
+            }
+
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.05);
+            }
+
+            /* 自定义光标 */
+            .cursor {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 12px;
+                height: 12px;
+                background: white;
+                border-radius: 50%;
+                pointer-events: none;
+                mix-blend-mode: difference;
+                z-index: 9999;
+                transition: transform 0.2s ease;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="hero"></div>
+        <div class="light-overlay"></div>
+
+        <div class="glass-card">
+            <h1>Beyond the Lens</h1>
+            <p>你所看到的，都是我心中想说的话。</p>
+            <a class="btn" href="#">进入作品集</a>
+        </div>
+
+        <div class="cursor" id="cursor"></div>
+
+        <script>
+            // 自定义光标跟随
+            const cursor = document.getElementById("cursor");
+            document.addEventListener("mousemove", (e) => {
+                cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
+        </script>
+    </body>
+</html>
