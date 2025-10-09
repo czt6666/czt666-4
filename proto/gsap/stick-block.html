@@ -18,12 +18,12 @@
                 font-size: 2em;
             }
             .sticky-wrapper {
-                height: 300vh;
+                height: 500vh;
                 background: linear-gradient(#fefcea, #f1da36);
             }
             .sticky-card {
                 position: sticky;
-                top: 30vh;
+                top: 75vh;
                 width: 60%;
                 margin: auto;
                 padding: 80px;
@@ -48,9 +48,9 @@
             gsap.registerPlugin(ScrollTrigger);
 
             gsap.to(".bg", {
-                y: -300,
+                y: "-12.5vh",
                 scrollTrigger: {
-                    trigger: ".container",
+                    trigger: ".sticky-wrapper",
                     start: "top top",
                     end: "bottom bottom",
                     scrub: true,

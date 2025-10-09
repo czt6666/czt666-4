@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>GSAP 创意交互 Demo</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: sans-serif;
+                overflow-x: hidden;
+                background: #111;
+                color: #fff;
+            }
+            section {
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                flex-wrap: wrap;
+            }
+            h1,
+            p {
+                color: white;
+                text-align: center;
+            }
+
+            /* 卡片翻转 */
+            .card-section {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .card {
+                width: 150px;
+                height: 200px;
+                background: #ff7eb3;
+                margin: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: white;
+                border-radius: 12px;
+                transform-style: preserve-3d;
+                perspective: 1000px;
+            }
+
+            /* 瀑布漂浮图片 */
+            .float-section {
+                background: #222;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+            }
+            .float-img {
+                width: 80px;
+                height: 80px;
+                margin: 5px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+            /* 打字机文字 */
+            .typer-section {
+                background: #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .typer {
+                font-size: 28px;
+                color: #00ff99;
+                width: 80%;
+            }
+
+            /* 横向滚动时间轴 */
+            .timeline-wrapper {
+                background: #000;
+                overflow: hidden;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+            }
+            .timeline-container {
+                display: flex;
+                height: 100%;
+            }
+            .timeline {
+                display: flex;
+            }
+            .timeline img {
+                width: 200px;
+                height: 200px;
+                margin: 0 15px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 1️⃣ 卡片翻转 -->
+        <section class="card-section">
+            <h1 style="width: 100%; text-align: center; margin-bottom: 20px">卡片翻转效果</h1>
+            <div class="card">A</div>
+            <div class="card">B</div>
+            <div class="card">C</div>
+            <div class="card">D</div>
+            <div class="card">E</div>
+            <div class="card">F</div>
+        </section>
+
+        <!-- 2️⃣ 瀑布漂浮图片 -->
+        <section class="float-section">
+            <!-- 50 张图片 -->
+            <script>
+                for (let i = 101; i <= 150; i++) {
+                    document.write(`<img src="https://picsum.photos/id/${i}/80/80" class="float-img">`);
+                }
+            </script>
+        </section>
+
+        <!-- 3️⃣ 打字机文字 -->
+        <section class="typer-section">
+            <div class="typer">
+                这是一段随着滚动显示的打字机文字动画效果，用于故事叙述或教程展示。随着页面滚动，文字逐渐出现，模拟真实打字机的视觉体验。
+            </div>
+        </section>
+
+        <!-- 4️⃣ 横向滚动时间轴 -->
+        <section class="timeline-wrapper">
+            <div class="timeline-container">
+                <div class="timeline">
+                    <script>
+                        for (let i = 151; i <= 170; i++) {
+                            document.write(`<img src="https://picsum.photos/id/${i}/200/200">`);
+                        }
+                    </script>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            /* 1️⃣ 卡片翻转 */
+            gsap.utils.toArray(".card").forEach((card) => {
+                gsap.fromTo(
+                    card,
+                    { rotateX: 90, scale: 0.8, opacity: 0 },
+                    {
+                        rotateX: 0,
+                        scale: 1,
+                        opacity: 1,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 90%",
+                            end: "top 50%",
+                            scrub: true,
+                        },
+                    }
+                );
+            });
+
+            /* 2️⃣ 瀑布漂浮图片 */
+            gsap.utils.toArray(".float-img").forEach((img) => {
+                gsap.fromTo(
+                    img,
+                    { x: gsap.utils.random(-200, 200), y: gsap.utils.random(-100, 100), opacity: 0 },
+                    {
+                        x: 0,
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        scrollTrigger: {
+                            trigger: img,
+                            start: "top 90%",
+                            end: "top 50%",
+                            scrub: true,
+                        },
+                    }
+                );
+            });
+
+            /* 3️⃣ 打字机文字 */
+            document.querySelectorAll(".typer").forEach((el) => {
+                const text = el.textContent;
+                el.textContent = "";
+                ScrollTrigger.create({
+                    trigger: el,
+                    start: "top 80%",
+                    end: "top 20%",
+                    onUpdate: (self) => {
+                        const length = Math.floor(text.length * self.progress);
+                        el.textContent = text.substring(0, length);
+                    },
+                    scrub: true,
+                });
+            });
+
+            /* 4️⃣ 横向滚动时间轴 */
+            gsap.to(".timeline-container", {
+                x: () => -(document.querySelector(".timeline").scrollWidth - window.innerWidth),
+                scrollTrigger: {
+                    trigger: ".timeline-wrapper",
+                    start: "top top",
+                    end: () => "+=" + document.querySelector(".timeline").scrollWidth,
+                    scrub: true,
+                    pin: true,
+                },
+            });
+        </script>
+    </body>
+</html>

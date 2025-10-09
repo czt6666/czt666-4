@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Sticky 图片 + 滚动文字（双向）</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                font-family: sans-serif;
+                background: #000;
+                color: #fff;
+            }
+            .container {
+                display: flex;
+                margin-bottom: 200px;
+            }
+            .sticky-img {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                width: 60vw;
+                background: #222;
+            }
+            .sticky-img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: opacity 0.4s ease;
+            }
+            .text-panel {
+                width: 40vw;
+                padding: 200px 30px;
+            }
+            .text-panel p {
+                margin-bottom: 60vh;
+                font-size: 22px;
+                line-height: 1.6;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 第一组 -->
+        <div class="container">
+            <div class="sticky-img">
+                <img id="main-img1" src="https://picsum.photos/id/1005/1000/1000" />
+            </div>
+            <div class="text-panel" id="panel1">
+                <p data-img="1005">🌅 在海边迎接第一缕晨光，海风带着咸味和温暖的气息。</p>
+                <p data-img="1011">🏔️ 高山上的清晨，薄雾中传来鸟鸣和远处的溪水声。</p>
+                <p data-img="1018">🌸 春日的花海，粉色的花瓣在微风中轻轻摇曳。</p>
+                <p data-img="1024">🏙️ 城市的黄昏，街灯与落日交织成温柔的色彩。</p>
+            </div>
+        </div>
+
+        <!-- 第二组 -->
+        <div class="container">
+            <div class="text-panel" id="panel2">
+                <p data-img="1018">🌸 春日的花海，粉色的花瓣在微风中轻轻摇曳。</p>
+                <p data-img="1024">🏙️ 城市的黄昏，街灯与落日交织成温柔的色彩。</p>
+                <p data-img="1032">🌲 森林深处，阳光透过树叶，洒在柔软的苔藓上。</p>
+                <p data-img="1041">🌌 夜空下的宁静，繁星点点，仿佛能听到宇宙的呼吸。</p>
+            </div>
+            <div class="sticky-img">
+                <img id="main-img2" src="https://picsum.photos/id/1018/1000/1000" />
+            </div>
+        </div>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            const mainImg1 = document.getElementById("main-img1");
+            const mainImg2 = document.getElementById("main-img2");
+
+            const allImgIds = ["1005", "1011", "1018", "1024", "1032", "1041"];
+            allImgIds.forEach((id) => {
+                const img = new Image();
+                img.src = `https://picsum.photos/id/${id}/1000/1000`; // 预加载
+            });
+
+            function changeImage(imgElement, imgId) {
+                imgElement.style.opacity = 0;
+                setTimeout(() => {
+                    imgElement.src = `https://picsum.photos/id/${imgId}/1000/1000`;
+                    imgElement.style.opacity = 1;
+                }, 300);
+            }
+
+            // 第一组
+            document.querySelectorAll("#panel1 p").forEach((p) => {
+                ScrollTrigger.create({
+                    trigger: p,
+                    start: "top center",
+                    onEnter: () => changeImage(mainImg1, p.dataset.img),
+                    onEnterBack: () => changeImage(mainImg1, p.dataset.img),
+                });
+            });
+
+            // 第二组
+            document.querySelectorAll("#panel2 p").forEach((p) => {
+                ScrollTrigger.create({
+                    trigger: p,
+                    start: "top center",
+                    onEnter: () => changeImage(mainImg2, p.dataset.img),
+                    onEnterBack: () => changeImage(mainImg2, p.dataset.img),
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>渐入渐出横向段落</title>
+        <style>
+            body {
+                margin: 0;
+                background: #111;
+                font-family: sans-serif;
+            }
+
+            section {
+                height: 50vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                border-bottom: 2px solid #ccc;
+            }
+
+            .box {
+                width: 100%;
+                height: 100%;
+                font-size: 3rem;
+                color: white;
+                background: radial-gradient(circle, #1e90ff, #00ced1); /* 蓝到浅绿 */
+                transform: translateX(-100vw);
+            }
+        </style>
+    </head>
+    <body>
+        <section></section>
+        <section><div class="box">Section 1</div></section>
+        <section><div class="box">Section 2</div></section>
+        <section><div class="box">Section 3</div></section>
+        <section><div class="box">Section 4</div></section>
+        <section><div class="box">Section 5</div></section>
+        <section><div class="box">Section 1</div></section>
+        <section><div class="box">Section 2</div></section>
+        <section><div class="box">Section 3</div></section>
+        <section><div class="box">Section 4</div></section>
+        <section><div class="box">Section 5</div></section>
+        <section></section>
+
+        <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+        <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            document.querySelectorAll(".box").forEach((box) => {
+                // 进场动画
+                gsap.fromTo(
+                    box,
+                    { x: "-100vw", borderRadius: "1000px", opacity: 0 },
+                    {
+                        x: "0vw",
+                        borderRadius: "0px",
+                        opacity: 1,
+                        scrollTrigger: {
+                            trigger: box,
+                            start: "top 100%",
+                            end: "top 85%",
+                            scrub: true,
+                        },
+                    }
+                );
+
+                // 出场动画
+                gsap.fromTo(
+                    box,
+                    { x: "0vw", borderRadius: "0px", opacity: 1 },
+                    {
+                        x: "100vw",
+                        borderRadius: "1000px",
+                        opacity: 0,
+                        scrollTrigger: {
+                            trigger: box,
+                            start: "top -25%",
+                            end: "top -50%",
+                            scrub: true,
+                        },
+                    }
+                );
+            });
+        </script>
+    </body>
+</html>

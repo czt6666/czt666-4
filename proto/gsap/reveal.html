@@ -2,15 +2,17 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>图文错位 Reveal</title>
+        <title>蓝色渐变 Box Reveal</title>
         <style>
             body {
                 margin: 0;
                 font-family: sans-serif;
+                background: #000; /* 背景黑色 */
+                color: white;
             }
             .container {
                 display: flex;
-                height: 500vh;
+                height: 3144px;
                 position: relative;
             }
 
@@ -22,16 +24,22 @@
                 height: 100vh;
                 display: flex;
                 align-items: center;
+                background: rgba(254, 197, 99, 0.8); /* 半透明背景 */
+                border-right: 2px solid #444;
             }
 
-            .images {
+            .boxes {
                 width: 60%;
             }
 
-            .images img {
+            .box {
                 width: 100%;
+                height: 600px;
+                margin-bottom: 36px;
                 opacity: 0;
                 transform: scale(0.95);
+                background: radial-gradient(circle, #1e90ff, #00ced1); /* 蓝到浅绿 */
+                border-radius: 12px;
             }
         </style>
     </head>
@@ -40,21 +48,22 @@
             <div class="text">
                 <h2>Scroll to Reveal</h2>
             </div>
-            <div class="images">
-                <img src="https://picsum.photos/id/1015/800/600" />
-                <img src="https://picsum.photos/id/1025/800/600" />
-                <img src="https://picsum.photos/id/1035/800/600" />
-                <img src="https://picsum.photos/id/1045/800/600" />
-                <img src="https://picsum.photos/id/1055/800/600" />
+            <div class="boxes">
+                <div class="box">1</div>
+                <div class="box">2</div>
+                <div class="box">3</div>
+                <div class="box">4</div>
+                <div class="box">5</div>
             </div>
         </div>
+
         <div class="container">
-            <div class="images">
-                <img src="https://picsum.photos/id/1015/800/600" />
-                <img src="https://picsum.photos/id/1025/800/600" />
-                <img src="https://picsum.photos/id/1035/800/600" />
-                <img src="https://picsum.photos/id/1045/800/600" />
-                <img src="https://picsum.photos/id/1055/800/600" />
+            <div class="boxes">
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
             </div>
             <div class="text">
                 <h2>Scroll to Reveal</h2>
@@ -66,14 +75,14 @@
         <script>
             gsap.registerPlugin(ScrollTrigger);
 
-            const imgs = document.querySelectorAll(".images img");
-            imgs.forEach((img, i) => {
-                gsap.to(img, {
+            const boxes = document.querySelectorAll(".box");
+            boxes.forEach((box) => {
+                gsap.to(box, {
                     opacity: 1,
                     scale: 1,
                     duration: 1,
                     scrollTrigger: {
-                        trigger: img,
+                        trigger: box,
                         start: "top 80%",
                         end: "bottom 60%",
                         scrub: true,
