@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Sticky Grid Scroll Follow</title>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                background: #111;
+                color: #fff;
+                font-family: sans-serif;
+                height: 300vh;
+            }
+
+            section {
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: pink;
+            }
+
+            /* 让 wrapper 粘在屏幕中间，并固定 500px 显示区域 */
+            .wrapper {
+                width: 100vw;
+                height: 100vw;
+                overflow: hidden;
+                z-index: 2;
+            }
+
+            .grid {
+                width: 100vw;
+                height: 50vw;
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+                gap: 4px;
+            }
+
+            .grid img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <section><h1>Scroll Down</h1></section>
+
+        <div class="wrapper">
+            <div class="grid" id="photoGrid">
+                <!-- 12*6 = 72 images -->
+                <script>
+                    for (let i = 1; i <= 72; i++) {
+                        document.write(`<img src="https://picsum.photos/400/400?random=${i}" />`);
+                    }
+                </script>
+            </div>
+        </div>
+
+        <section><h1>Scroll Again</h1></section>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            const imgs = document.querySelectorAll("#photoGrid img");
+
+            // ScrollTrigger：每格滚到自己的位置后停住 + 顺序延迟
+            imgs.forEach((img, i) => {
+                gsap.fromTo(
+                    img,
+                    { y: 120 + i * 6, scale: 1.3, opacity: 0 },
+                    {
+                        y: 0,
+                        scale: 1,
+                        opacity: 1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: img,
+                            start: "top 95%",
+                            end: "top 60%",
+                            scrub: true,
+                        },
+                    },
+                );
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+@import './variables.scss';
+
+html {
+  font-size: $font-size-base; // 默认16px，可动态调整
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+  background-color: $color-bg;
+  color: $color-text;
+}
+
+/* 响应式布局 */
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: $breakpoint-pad) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+/* 字体放大按钮 */
+.font-controls {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  button {
+    margin: 0 5px;
+    font-size: 1rem;
+  }
+}
