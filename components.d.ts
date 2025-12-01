@@ -11,9 +11,17 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BoxReveal: typeof import('./src/components/home/BoxReveal.vue')['default']
     Content: typeof import('./src/components/Content.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
+    HorizontalPanels: typeof import('./src/components/home/HorizontalPanels.vue')['default']
+    PhotoFade: typeof import('./src/components/home/PhotoFade.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
+    SlideSections: typeof import('./src/components/home/SlideSections.vue')['default']
+    StickyCard: typeof import('./src/components/home/StickyCard.vue')['default']
+    StickyGrid: typeof import('./src/components/home/StickyGrid.vue')['default']
+    WaterfallText: typeof import('./src/components/home/WaterfallText.vue')['default']
   }
 }
