@@ -7,8 +7,13 @@
         }"
     >
         <div class="container">
-            <div class="left">Left Key Area</div>
-            <div class="right" v-if="scrollY <= vh100">Right Area</div>
+            <a href="#" class="logo">作品集</a>
+            <nav class="right">
+                <a href="#frontend">前端作品</a>
+                <a href="#photo">摄影</a>
+                <a href="#travel-story">旅游经历</a>
+                <a href="#travel-route">旅游路线</a>
+            </nav>
         </div>
     </header>
 </template>
@@ -40,17 +45,13 @@ onBeforeUnmount(() => {
     left: 0;
     width: 100%;
     height: 60px;
-    // backdrop-filter: blur(10px);
     background-color: transparent;
-    background-color: pink;
     transition: all 0.3s ease;
     z-index: 999;
 
     &.compact {
-        background: blue;
-        .right {
-            display: none !important;
-        }
+        background: rgba(20, 20, 25, 0.92);
+        backdrop-filter: blur(8px);
     }
 
     &.hide {
@@ -66,9 +67,26 @@ onBeforeUnmount(() => {
     justify-content: space-between;
     margin: 0 auto;
 
-    .left {
-        padding: 0 20px;
-        border-radius: 50%;
+    .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    nav.right {
+        display: flex;
+        gap: 28px;
+
+        a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.95rem;
+
+            &:hover {
+                color: #fff;
+            }
+        }
     }
 }
 </style>

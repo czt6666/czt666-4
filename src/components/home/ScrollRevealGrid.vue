@@ -1,5 +1,6 @@
 <template>
     <div class="photo-grid">
+        <div class="grid-title">旅行与日常 · 瞬间</div>
         <div class="grid" id="photoGrid">
             <img v-for="i in 72" :key="i" :src="`https://picsum.photos/400/400?random=${i}`" />
         </div>
@@ -43,6 +44,15 @@ onMounted(() => {
     height: calc(50vw + 100vh);
     background: #111;
     color: #fff;
+}
+
+.grid-title {
+    position: sticky;
+    top: 0;
+    background: #111;
+    font-size: 1.5rem;
+    padding: 16px 20px;
+    z-index: 10;
 }
 
 .grid {

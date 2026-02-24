@@ -1,6 +1,6 @@
 <template>
-    <div class="photo-root">
-        <div class="title">摄影 · 记录时间的方式</div>
+    <div class="photo-root" id="photo">
+        <!-- <div class="title">摄影 · 记录时间的方式</div> -->
 
         <div
             class="photo"
