@@ -18,14 +18,6 @@
                     <span class="box-title">H5 活动页</span>
                     <span class="box-desc">动效与适配</span>
                 </div>
-                <div class="box">
-                    <span class="box-title">组件库</span>
-                    <span class="box-desc">设计与封装</span>
-                </div>
-                <div class="box">
-                    <span class="box-title">个人博客</span>
-                    <span class="box-desc">写作与展示</span>
-                </div>
             </div>
         </div>
 
@@ -35,8 +27,6 @@
                     <span class="box-title">更多项目</span>
                     <span class="box-desc">持续更新中</span>
                 </div>
-                <div class="box box-alt"></div>
-                <div class="box box-alt"></div>
                 <div class="box box-alt"></div>
                 <div class="box box-alt"></div>
             </div>
@@ -80,7 +70,8 @@ onMounted(() => {
 
 .container {
     display: flex;
-    height: 3144px;
+    /* height: 1872px; */
+    /* height: 100vh; */
     position: relative;
 }
 
@@ -89,6 +80,7 @@ onMounted(() => {
     padding: 2rem;
     position: sticky;
     top: 0;
+    left: 0;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -113,6 +105,10 @@ onMounted(() => {
     justify-content: flex-end;
     padding: 24px;
     color: #fff;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 .box-title {
     font-size: 1.5rem;

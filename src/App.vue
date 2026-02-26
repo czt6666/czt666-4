@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="app">
         <router-view></router-view>
     </div>
 </template>
@@ -9,7 +9,7 @@ import { ref } from "vue";
 </script>
 
 <style scoped>
-.container {
-    min-height: 100vh;
+#app {
+    width: 100%;
 }
 </style>

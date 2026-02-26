@@ -25,13 +25,6 @@
                 <p>鼓浪屿、骑楼与海风，闽南的慢与甜。</p>
             </div>
         </section>
-        <section>
-            <div class="box2">
-                <h3>西安</h3>
-                <p>城墙、兵马俑与碳水之都，古今交错。</p>
-            </div>
-        </section>
-        <section class="blank"></section>
     </div>
 </template>
 

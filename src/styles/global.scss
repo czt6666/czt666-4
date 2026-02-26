@@ -17,18 +17,6 @@ body {
     color: $color-text;
 }
 
-/* 响应式布局 */
-.container {
-    display: flex;
-    flex-direction: row;
-}
-
-@media (max-width: $breakpoint-pad) {
-    .container {
-        flex-direction: column;
-    }
-}
-
 /* 字体放大按钮 */
 .font-controls {
     position: fixed;
