@@ -1,7 +1,25 @@
-// 断点
-$breakpoint-mobile: 767px;
+// ========== 断点（移动端优先，min-width） ==========
+$breakpoint-mobile: 768px;   // 小于此宽度视为移动端
 $breakpoint-pad: 1024px;
 $breakpoint-pc: 1440px;
+
+// ========== 响应式尺寸（可统一调整） ==========
+// Header
+$header-height: 64px;
+$header-height-mobile: 56px;
+$header-padding-x: 24px;
+$header-padding-x-mobile: 16px;
+
+// Footer
+$footer-height: 380px;
+$footer-height-mobile: 240px;
+$footer-height-pad: 320px;
+
+// 模块通用
+$section-min-height-mobile: 60vh;   // 移动端最小视高，避免过扁
+$content-padding-x: 24px;
+$content-padding-x-mobile: 16px;
+$content-gap-mobile: 16px;
 
 // 字体大小
 $font-size-base: 16px;

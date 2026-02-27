@@ -10,9 +10,6 @@
 <script setup>
 import { onMounted } from "vue";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 onMounted(() => {
     const imgs = document.querySelectorAll("#photoGrid img");
@@ -39,11 +36,26 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
+
 .photo-grid {
+    overflow-x: hidden;
     width: 100%;
-    height: calc(50vw + 100vh);
+    height: calc(50vw + 50vh);
     background: #111;
     color: #fff;
+    margin-bottom: -40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom: 2px solid #222;
+
+    @include mobile {
+        height: calc(200vw + 50vh);
+        margin-bottom: -24px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+    }
 }
 
 .grid-title {
@@ -56,16 +68,25 @@ onMounted(() => {
 }
 
 .grid {
-    width: 100%;
     height: 50vw;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(6, 1fr);
     gap: 4px;
 
+    @include mobile {
+        height: 200vw;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(12, 1fr);
+        gap: 3px;
+        padding: 0 $content-padding-x-mobile;
+        padding-bottom: $content-gap-mobile;
+    }
+
     img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
     }
 }
 </style>

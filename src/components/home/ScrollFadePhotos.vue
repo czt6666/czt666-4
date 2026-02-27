@@ -16,8 +16,6 @@ import { onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 onMounted(() => {
     gsap.utils.toArray(".photo").forEach((p) => {
         gsap.to(p, {

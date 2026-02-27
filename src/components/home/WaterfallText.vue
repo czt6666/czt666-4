@@ -11,8 +11,6 @@ import { ref, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const lines = ref(["你好", "欢迎来到", "灵感的瀑布", "每一行都流动", "随着滚动逐渐坠落"]);
 
 onMounted(() => {

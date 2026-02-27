@@ -25,8 +25,6 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 onMounted(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     const sections = gsap.utils.toArray(".panel");
 
     gsap.to(sections, {
@@ -43,8 +41,12 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
+
 .wrapper {
+    width: 100%;
     height: 100vh;
     display: flex;
     overflow: hidden;

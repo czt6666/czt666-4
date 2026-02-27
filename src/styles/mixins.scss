@@ -1,0 +1,45 @@
+// ========== 移动端适配 Mixins ==========
+// 使用方式：@include mobile { ... } 表示「仅在小屏生效」
+// 使用 @use 命名空间，避免与组件内 @use "variables" as * 冲突
+@use "./variables.scss" as v;
+
+// 移动端：小于 $breakpoint-mobile
+@mixin mobile {
+    @media (max-width: #{v.$breakpoint-mobile - 1px}) {
+        @content;
+    }
+}
+
+// 平板及以上：>= $breakpoint-mobile
+@mixin from-pad {
+    @media (min-width: v.$breakpoint-mobile) {
+        @content;
+    }
+}
+
+// 平板区间
+@mixin pad {
+    @media (min-width: v.$breakpoint-mobile) and (max-width: #{v.$breakpoint-pad - 1px}) {
+        @content;
+    }
+}
+
+// 桌面
+@mixin desktop {
+    @media (min-width: v.$breakpoint-pad) {
+        @content;
+    }
+}
+
+// 大屏
+@mixin wide {
+    @media (min-width: v.$breakpoint-pc) {
+        @content;
+    }
+}
+
+// 通用：安全区域（刘海/底部横条）
+@mixin safe-area-inset($prop: padding) {
+    #{$prop}-left: max(#{v.$content-padding-x-mobile}, env(safe-area-inset-left));
+    #{$prop}-right: max(#{v.$content-padding-x-mobile}, env(safe-area-inset-right));
+}

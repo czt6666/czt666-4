@@ -1,35 +1,43 @@
 <template>
-    <Header />
+    <div class="home-page">
+        <Header />
 
-    <!-- 前端作品：随滚动展示项目卡片 -->
-    <ScrollRevealBlocks />
+        <!-- 全屏轮播 -->
+        <HeroCarousel />
 
-    <!-- 横向滑动 -->
-    <HorizontalPinPanels />
+        <!-- 粘连卡片 -->
+        <ScrollRevealBlocks />
 
-    <!-- 粘性居中文字 -->
-    <!-- <StickyFixText /> -->
+        <!-- 横向全屏滑动 -->
+        <HorizontalPinPanels />
 
-    <!-- 左右滑入 -->
-    <SlideInSections />
+        <!-- 左右滑入 -->
+        <SlideInSections />
 
-    <!-- 摄影：固定标题 + 大图渐显 -->
-    <!-- <ScrollFadePhoto /> -->
+        <!-- 照片 fade -->
+        <ScrollFadeFullScreen />
 
-    <!-- 摄影：竖排 n 张照片，随滚动位置固定、逐张隐藏显示 -->
-    <ScrollFadeFixPhotos />
+        <!-- 照片网格 -->
+        <ScrollRevealGrid />
 
-    <!-- 照片网格 -->
-    <ScrollRevealGrid />
+        <!-- 页脚背景图 -->
+        <FooterBg />
+    </div>
 </template>
 
 <script setup>
 import Header from "@/components/Header.vue";
+import HeroCarousel from "@/components/home/HeroCarousel.vue";
 import ScrollRevealBlocks from "@/components/home/ScrollRevealBlocks.vue";
 import HorizontalPinPanels from "@/components/home/HorizontalPinPanels.vue";
-import StickyFixText from "@/components/home/StickyFixText.vue";
 import SlideInSections from "@/components/home/SlideInSections.vue";
-import ScrollFadePhoto from "@/components/home/ScrollFadePhotos.vue";
-import ScrollFadeFixPhotos from "@/components/home/ScrollFadeFixPhotos.vue";
+import ScrollFadeFullScreen from "@/components/home/ScrollFadeFullScreen.vue";
 import ScrollRevealGrid from "@/components/home/ScrollRevealGrid.vue";
+import FooterBg from "@/components/home/FooterBg.vue";
 </script>
+
+<style scoped>
+.home-page {
+    width: 100%;
+}
+</style>

@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GSAP Scroll Animations</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg: #08080f;
+                --ink: #e8e2d4;
+                --acid: #c8f03a;
+                --flame: #ff4d1c;
+                --ice: #3af0f0;
+                --violet: #9b3af0;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--ink);
+                font-family: "DM Mono", monospace;
+                overflow-x: hidden;
+            }
+
+            /* PROGRESS BAR */
+            #progress {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 3px;
+                background: linear-gradient(90deg, var(--violet), var(--ice), var(--acid));
+                z-index: 9999;
+                transform-origin: left center;
+            }
+
+            /* SCROLL DOWN HINT */
+            #scroll-hint {
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 10px;
+                letter-spacing: 5px;
+                color: rgba(232, 226, 212, 0.4);
+                text-transform: uppercase;
+                z-index: 999;
+                transition: opacity 0.5s;
+                text-align: center;
+            }
+            #scroll-hint::after {
+                content: "";
+                display: block;
+                width: 1px;
+                height: 40px;
+                background: linear-gradient(var(--acid), transparent);
+                margin: 8px auto 0;
+                animation: bounce 1.4s ease-in-out infinite;
+            }
+            @keyframes bounce {
+                0%,
+                100% {
+                    transform: scaleY(0.5);
+                    opacity: 0.3;
+                }
+                50% {
+                    transform: scaleY(1);
+                    opacity: 1;
+                }
+            }
+
+            /* SECTION BASE */
+            section {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                padding: 60px 40px;
+            }
+            .tag {
+                position: absolute;
+                top: 28px;
+                left: 32px;
+                font-size: 10px;
+                letter-spacing: 4px;
+                color: rgba(232, 226, 212, 0.18);
+                text-transform: uppercase;
+            }
+
+            /* ══════ SCENE 1 — LETTER EXPLOSION ══════ */
+            #s1 {
+                background: var(--bg);
+            }
+            #s1::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image:
+                    linear-gradient(rgba(200, 240, 58, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(200, 240, 58, 0.03) 1px, transparent 1px);
+                background-size: 64px 64px;
+            }
+            .s1-inner {
+                text-align: center;
+                position: relative;
+                z-index: 1;
+            }
+            .big-word {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(72px, 16vw, 200px);
+                line-height: 0.85;
+                letter-spacing: -4px;
+                color: transparent;
+                -webkit-text-stroke: 1.5px var(--acid);
+                display: flex;
+                justify-content: center;
+            }
+            .big-word .ch {
+                display: inline-block;
+                will-change: transform, opacity;
+            }
+            .s1-sub {
+                font-size: 10px;
+                letter-spacing: 6px;
+                color: rgba(200, 240, 58, 0.4);
+                margin-top: 20px;
+                opacity: 0;
+                text-transform: uppercase;
+            }
+
+            /* ══════ SCENE 2 — COUNTER NUMBERS ══════ */
+            #s2 {
+                background: radial-gradient(ellipse at center, #0d0820 0%, var(--bg) 70%);
+                flex-direction: column;
+                gap: 0;
+            }
+            .counter-wrap {
+                display: flex;
+                gap: clamp(20px, 5vw, 80px);
+                align-items: flex-end;
+            }
+            .counter-item {
+                text-align: center;
+            }
+            .counter-num {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(60px, 12vw, 150px);
+                line-height: 1;
+                display: block;
+                will-change: transform;
+            }
+            .counter-label {
+                font-size: 9px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                margin-top: 8px;
+                display: block;
+            }
+            #cn1 {
+                color: var(--violet);
+            }
+            #cn2 {
+                color: var(--ice);
+            }
+            #cn3 {
+                color: var(--flame);
+            }
+            #cn4 {
+                color: var(--acid);
+            }
+
+            /* ══════ SCENE 3 — MORPHING SVG ══════ */
+            #s3 {
+                background: var(--bg);
+                flex-direction: column;
+                gap: 24px;
+            }
+            #morph-svg {
+                overflow: visible;
+            }
+            .morph-lbl {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(48px, 10vw, 120px);
+                letter-spacing: 8px;
+                color: var(--ink);
+                will-change: transform;
+            }
+
+            /* ══════ SCENE 4 — STAGGER TEXT ══════ */
+            #s4 {
+                background: linear-gradient(160deg, #08080f, #080f0f);
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: clamp(40px, 8vw, 120px);
+            }
+            .rl {
+                overflow: hidden;
+                line-height: 1;
+                margin-bottom: 4px;
+            }
+            .rl span {
+                display: block;
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(48px, 10vw, 130px);
+                letter-spacing: -2px;
+                will-change: transform;
+                transform: translateY(105%);
+            }
+            .rl:nth-child(1) span {
+                color: var(--ink);
+            }
+            .rl:nth-child(2) span {
+                color: var(--acid);
+            }
+            .rl:nth-child(3) span {
+                color: transparent;
+                -webkit-text-stroke: 1.5px var(--flame);
+            }
+            .rl:nth-child(4) span {
+                color: transparent;
+                -webkit-text-stroke: 1px var(--ice);
+                font-size: clamp(28px, 5vw, 70px);
+            }
+            .s4-meta {
+                font-size: 10px;
+                letter-spacing: 5px;
+                color: rgba(232, 226, 212, 0.3);
+                margin-top: 28px;
+                opacity: 0;
+                text-transform: uppercase;
+            }
+
+            /* ══════ SCENE 5 — PARTICLE CANVAS ══════ */
+            #s5 {
+                background: var(--bg);
+                padding: 0;
+            }
+            #pcv {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+            }
+            .s5-txt {
+                position: relative;
+                z-index: 2;
+                text-align: center;
+            }
+            .s5-txt h2 {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(60px, 15vw, 200px);
+                letter-spacing: -6px;
+                color: transparent;
+                -webkit-text-stroke: 1px var(--flame);
+                will-change: transform, opacity;
+                opacity: 0;
+            }
+            .dot-grid {
+                display: flex;
+                flex-wrap: wrap;
+                width: clamp(200px, 50vw, 400px);
+                gap: 10px;
+                margin: 32px auto 0;
+                justify-content: center;
+            }
+            .dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--acid);
+                opacity: 0;
+                will-change: transform, opacity;
+            }
+
+            /* ══════ SCENE 6 — HORIZONTAL PANELS ══════ */
+            #s6 {
+                padding: 0;
+                overflow: hidden;
+            }
+            .h-track {
+                display: flex;
+                will-change: transform;
+            }
+            .h-panel {
+                width: 100vw;
+                height: 100vh;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 16px;
+                position: relative;
+                border-right: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .h-panel:nth-child(1) {
+                background: linear-gradient(135deg, #08080f, #120820);
+            }
+            .h-panel:nth-child(2) {
+                background: linear-gradient(135deg, #08080f, #080f12);
+            }
+            .h-panel:nth-child(3) {
+                background: linear-gradient(135deg, #08080f, #120808);
+            }
+            .h-panel:nth-child(4) {
+                background: linear-gradient(135deg, #08080f, #080e0e);
+            }
+            .h-num {
+                position: absolute;
+                top: 32px;
+                left: 36px;
+                font-size: 10px;
+                letter-spacing: 4px;
+                color: rgba(232, 226, 212, 0.18);
+            }
+            .h-word {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(80px, 17vw, 230px);
+                letter-spacing: -6px;
+                line-height: 0.85;
+                will-change: transform, opacity;
+            }
+            #hw1 {
+                color: var(--violet);
+                text-shadow: 0 0 60px rgba(155, 58, 240, 0.35);
+            }
+            #hw2 {
+                color: var(--ice);
+                text-shadow: 0 0 60px rgba(58, 240, 240, 0.25);
+            }
+            #hw3 {
+                color: var(--flame);
+                text-shadow: 0 0 60px rgba(255, 77, 28, 0.35);
+            }
+            #hw4 {
+                color: var(--acid);
+                text-shadow: 0 0 60px rgba(200, 240, 58, 0.3);
+            }
+            .h-sub {
+                font-size: 10px;
+                letter-spacing: 6px;
+                color: rgba(232, 226, 212, 0.25);
+                text-transform: uppercase;
+            }
+
+            /* ══════ SCENE 7 — OUTRO ══════ */
+            #s7 {
+                background: var(--bg);
+                flex-direction: column;
+                gap: 20px;
+            }
+            .outro-big {
+                font-family: "Bebas Neue", sans-serif;
+                font-size: clamp(70px, 16vw, 210px);
+                letter-spacing: -5px;
+                text-align: center;
+                background: linear-gradient(120deg, var(--violet), var(--ice) 50%, var(--acid));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                opacity: 0;
+                transform: scale(0.5) translateY(60px);
+                will-change: transform, opacity;
+            }
+            .outro-sub {
+                font-size: 10px;
+                letter-spacing: 6px;
+                color: rgba(232, 226, 212, 0.3);
+                text-align: center;
+                opacity: 0;
+                text-transform: uppercase;
+                will-change: opacity;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="progress"></div>
+        <div id="scroll-hint">scroll</div>
+
+        <!-- S1: LETTER EXPLOSION -->
+        <section id="s1">
+            <span class="tag">01 / SHATTER</span>
+            <div class="s1-inner">
+                <div class="big-word" id="w1">
+                    <span class="ch">G</span><span class="ch">S</span><span class="ch">A</span
+                    ><span class="ch">P</span>
+                </div>
+                <div class="big-word" id="w2" style="margin-top: -12px">
+                    <span class="ch">S</span><span class="ch">C</span><span class="ch">R</span
+                    ><span class="ch">O</span><span class="ch">L</span><span class="ch">L</span>
+                </div>
+                <p class="s1-sub" id="s1sub">SCROLL TRIGGERED ANIMATIONS</p>
+            </div>
+        </section>
+
+        <!-- S2: COUNTERS -->
+        <section id="s2">
+            <span class="tag">02 / COUNTER</span>
+            <div class="counter-wrap">
+                <div class="counter-item">
+                    <span class="counter-num" id="cn1">000</span>
+                    <span class="counter-label" style="color: var(--violet)">ANIMATIONS</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-num" id="cn2">000</span>
+                    <span class="counter-label" style="color: var(--ice)">FPS TARGET</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-num" id="cn3">00</span>
+                    <span class="counter-label" style="color: var(--flame)">SCENES</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-num" id="cn4">0000</span>
+                    <span class="counter-label" style="color: var(--acid)">SCROLL PX</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- S3: MORPHING SVG -->
+        <section id="s3">
+            <span class="tag">03 / MORPH</span>
+            <svg id="morph-svg" width="340" height="340" viewBox="-170 -170 340 340">
+                <circle r="155" fill="none" stroke="rgba(200,240,58,0.08)" stroke-width="1" />
+                <circle
+                    r="135"
+                    fill="none"
+                    stroke="rgba(58,240,240,0.06)"
+                    stroke-width="1"
+                    stroke-dasharray="4 8"
+                />
+                <path
+                    id="mp1"
+                    d="M-100,-100 L100,-100 L100,100 L-100,100 Z"
+                    fill="rgba(200,240,58,0.07)"
+                    stroke="var(--acid)"
+                    stroke-width="1.5"
+                />
+                <path
+                    id="mp2"
+                    d="M-60,-60 L60,-60 L60,60 L-60,60 Z"
+                    fill="none"
+                    stroke="rgba(58,240,240,0.5)"
+                    stroke-width="1"
+                    stroke-dasharray="6 4"
+                />
+                <circle r="4" fill="var(--acid)" />
+                <circle id="orbit-dot" r="5" fill="var(--flame)" cx="0" cy="-110" />
+            </svg>
+            <div class="morph-lbl" id="morphlbl">FORM</div>
+        </section>
+
+        <!-- S4: STAGGER TEXT -->
+        <section id="s4">
+            <span class="tag">04 / REVEAL</span>
+            <div>
+                <div class="rl"><span>EVERY</span></div>
+                <div class="rl"><span>PIXEL</span></div>
+                <div class="rl"><span>COUNTS</span></div>
+                <div class="rl"><span>IN MOTION</span></div>
+                <p class="s4-meta" id="s4meta">GSAP · SCROLLTRIGGER · SCRUB</p>
+            </div>
+        </section>
+
+        <!-- S5: PARTICLES + DOTS -->
+        <section id="s5">
+            <span class="tag" style="z-index: 3">05 / PARTICLES</span>
+            <canvas id="pcv"></canvas>
+            <div class="s5-txt">
+                <h2 id="s5h">LIVE</h2>
+                <div class="dot-grid" id="dotgrid"></div>
+            </div>
+        </section>
+
+        <!-- S6: HORIZONTAL SCROLL -->
+        <section id="s6">
+            <div class="h-track" id="htrack">
+                <div class="h-panel">
+                    <span class="h-num">01 / 04</span>
+                    <div class="h-word" id="hw1">DREAM</div>
+                    <span class="h-sub">imagine it</span>
+                </div>
+                <div class="h-panel">
+                    <span class="h-num">02 / 04</span>
+                    <div class="h-word" id="hw2">BUILD</div>
+                    <span class="h-sub">create it</span>
+                </div>
+                <div class="h-panel">
+                    <span class="h-num">03 / 04</span>
+                    <div class="h-word" id="hw3">BREAK</div>
+                    <span class="h-sub">test it</span>
+                </div>
+                <div class="h-panel">
+                    <span class="h-num">04 / 04</span>
+                    <div class="h-word" id="hw4">REPEAT</div>
+                    <span class="h-sub">iterate it</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- S7: OUTRO -->
+        <section id="s7">
+            <span class="tag">07 / FIN</span>
+            <div class="outro-big" id="outrobig">THE END</div>
+            <p class="outro-sub" id="outrosub">GSAP + SCROLLTRIGGER · SCROLL DEMO</p>
+        </section>
+
+        <script>
+            gsap.registerPlugin(ScrollTrigger);
+
+            // ── PROGRESS BAR ──
+            gsap.to("#progress", {
+                width: "100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 0,
+                },
+            });
+
+            // Hide scroll hint
+            ScrollTrigger.create({
+                start: 100,
+                onEnter: function () {
+                    gsap.to("#scroll-hint", { opacity: 0, duration: 0.5 });
+                },
+                onLeaveBack: function () {
+                    gsap.to("#scroll-hint", { opacity: 1, duration: 0.5 });
+                },
+            });
+
+            // ── SCENE 1: LETTER EXPLOSION ──
+            var allChars = document.querySelectorAll(".ch");
+
+            gsap.set(allChars, {
+                x: function () {
+                    return (Math.random() - 0.5) * 900;
+                },
+                y: function () {
+                    return (Math.random() - 0.5) * 700;
+                },
+                rotation: function () {
+                    return (Math.random() - 0.5) * 360;
+                },
+                scale: function () {
+                    return Math.random() * 1.8 + 0.2;
+                },
+                opacity: 0,
+            });
+            gsap.set("#s1sub", { opacity: 0, y: 20 });
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#s1",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 1,
+                },
+            })
+                .to(allChars, {
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    scale: 1,
+                    opacity: 1,
+                    stagger: 0.05,
+                    ease: "power3.out",
+                    duration: 1.5,
+                })
+                .to("#s1sub", { opacity: 1, y: 0, duration: 0.4 }, "-=0.3");
+
+            // ── SCENE 2: COUNTERS ──
+            gsap.from(".counter-item", {
+                y: 80,
+                opacity: 0,
+                stagger: 0.15,
+                scrollTrigger: {
+                    trigger: "#s2",
+                    start: "top center",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            ScrollTrigger.create({
+                trigger: "#s2",
+                start: "top center",
+                end: "bottom center",
+                scrub: 1.5,
+                onUpdate: function (self) {
+                    var p = self.progress;
+                    document.getElementById("cn1").textContent = String(
+                        Math.round(p * 256),
+                    ).padStart(3, "0");
+                    document.getElementById("cn2").textContent = String(
+                        Math.round(p * 120),
+                    ).padStart(3, "0");
+                    document.getElementById("cn3").textContent = String(Math.round(p * 7)).padStart(
+                        2,
+                        "0",
+                    );
+                    document.getElementById("cn4").textContent = String(
+                        Math.round(p * 9999),
+                    ).padStart(4, "0");
+                },
+            });
+
+            // ── SCENE 3: MORPHING SVG ──
+            var shapes = [
+                "M-100,-100 L100,-100 L100,100 L-100,100 Z",
+                "M0,-120 C66,-120 120,-66 120,0 C120,66 66,120 0,120 C-66,120 -120,66 -120,0 C-120,-66 -66,-120 0,-120 Z",
+                "M0,-115 L34,-42 L112,-35 L55,20 L68,100 L0,62 L-68,100 L-55,20 L-112,-35 L-34,-42 Z",
+                "M-90,-110 L90,-110 L120,0 L90,110 L-90,110 L-120,0 Z",
+                "M-100,-100 L100,-100 L100,100 L-100,100 Z",
+            ];
+            var shapes2 = [
+                "M-60,-60 L60,-60 L60,60 L-60,60 Z",
+                "M0,-70 C39,-70 70,-39 70,0 C70,39 39,70 0,70 C-39,70 -70,39 -70,0 C-70,-39 -39,-70 0,-70 Z",
+                "M0,-65 L19,-24 L64,-20 L32,12 L39,57 L0,36 L-39,57 L-32,12 L-64,-20 L-19,-24 Z",
+                "M-52,-64 L52,-64 L70,0 L52,64 L-52,64 L-70,0 Z",
+                "M-60,-60 L60,-60 L60,60 L-60,60 Z",
+            ];
+
+            var tl3 = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#s3",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1.5,
+                },
+            });
+            for (var si = 1; si < shapes.length; si++) {
+                tl3.to("#mp1", { attr: { d: shapes[si] }, duration: 1, ease: "power2.inOut" }).to(
+                    "#mp2",
+                    { attr: { d: shapes2[si] }, duration: 1, ease: "power2.inOut" },
+                    "<",
+                );
+            }
+
+            gsap.to("#orbit-dot", {
+                rotation: 360,
+                transformOrigin: "0px 110px",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#s3",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 2,
+                },
+            });
+
+            gsap.fromTo(
+                "#morph-svg",
+                { scale: 0.5, rotation: -20, opacity: 0 },
+                {
+                    scale: 1,
+                    rotation: 10,
+                    opacity: 1,
+                    scrollTrigger: {
+                        trigger: "#s3",
+                        start: "top bottom",
+                        end: "center center",
+                        scrub: 1,
+                    },
+                },
+            );
+
+            gsap.from("#morphlbl", {
+                y: 40,
+                opacity: 0,
+                scrollTrigger: {
+                    trigger: "#s3",
+                    start: "top center",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            // ── SCENE 4: STAGGER TEXT REVEAL ──
+            var lines = gsap.utils.toArray(".rl span");
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#s4",
+                    start: "top center",
+                    end: "center center",
+                    scrub: 1.2,
+                },
+            })
+                .to(lines, {
+                    y: 0,
+                    stagger: 0.3,
+                    duration: 1,
+                    ease: "power4.out",
+                })
+                .to("#s4meta", { opacity: 1, duration: 0.4 }, "-=0.1");
+
+            // ── SCENE 5: PARTICLE CANVAS + DOTS ──
+            var pcv = document.getElementById("pcv");
+            var pctx = pcv.getContext("2d");
+            var pColors = ["#c8f03a", "#3af0f0", "#ff4d1c", "#9b3af0", "#e8e2d4"];
+            var pts = [];
+            var scrollSpeedVal = 1;
+
+            function resizePcv() {
+                pcv.width = pcv.offsetWidth;
+                pcv.height = pcv.offsetHeight;
+            }
+            resizePcv();
+            window.addEventListener("resize", resizePcv);
+
+            function makePt(init) {
+                return {
+                    x: Math.random() * pcv.width,
+                    y: init ? Math.random() * pcv.height : pcv.height + 5,
+                    vy: -(Math.random() * 0.6 + 0.3),
+                    vx: (Math.random() - 0.5) * 0.5,
+                    r: Math.random() * 2 + 0.5,
+                    c: pColors[Math.floor(Math.random() * pColors.length)],
+                    a: Math.random() * 0.6 + 0.2,
+                    life: 1,
+                    decay: 0.003 + Math.random() * 0.004,
+                };
+            }
+            for (var pi = 0; pi < 180; pi++) pts.push(makePt(true));
+
+            ScrollTrigger.create({
+                trigger: "#s5",
+                start: "top bottom",
+                end: "bottom top",
+                onUpdate: function (self) {
+                    scrollSpeedVal = 0.5 + self.progress * 5;
+                },
+            });
+
+            function drawPts() {
+                pctx.clearRect(0, 0, pcv.width, pcv.height);
+                for (var i = 0; i < pts.length; i++) {
+                    var p = pts[i];
+                    p.y += p.vy * scrollSpeedVal;
+                    p.x += p.vx;
+                    p.life -= p.decay;
+                    if (p.life <= 0 || p.y < -5) {
+                        pts[i] = makePt(false);
+                        continue;
+                    }
+                    pctx.globalAlpha = p.a * p.life;
+                    pctx.fillStyle = p.c;
+                    pctx.beginPath();
+                    pctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    pctx.fill();
+                }
+                pctx.globalAlpha = 1;
+                requestAnimationFrame(drawPts);
+            }
+            drawPts();
+
+            // Dot grid
+            var dg = document.getElementById("dotgrid");
+            for (var di = 0; di < 80; di++) {
+                var dot = document.createElement("div");
+                dot.className = "dot";
+                dg.appendChild(dot);
+            }
+
+            gsap.set("#s5h", { opacity: 0, y: 40, scale: 0.8 });
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#s5",
+                    start: "top center",
+                    end: "center center",
+                    scrub: 1,
+                },
+            })
+                .to("#s5h", { opacity: 1, y: 0, scale: 1, duration: 0.4 })
+                .to(
+                    ".dot",
+                    {
+                        opacity: function () {
+                            return Math.random() * 0.8 + 0.2;
+                        },
+                        scale: function () {
+                            return Math.random() * 2 + 0.3;
+                        },
+                        background: function () {
+                            return pColors[Math.floor(Math.random() * pColors.length)];
+                        },
+                        stagger: { amount: 1.2, from: "random" },
+                        ease: "power2.out",
+                        duration: 0.5,
+                    },
+                    0.1,
+                );
+
+            // ── SCENE 6: HORIZONTAL SCROLL ──
+            var hPanels = gsap.utils.toArray(".h-panel");
+
+            gsap.to("#htrack", {
+                x: function () {
+                    return -(hPanels.length - 1) * window.innerWidth;
+                },
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#s6",
+                    pin: true,
+                    scrub: 1,
+                    start: "top top",
+                    end: function () {
+                        return "+=" + (hPanels.length - 1) * window.innerWidth;
+                    },
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            // ── SCENE 7: OUTRO ──
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#s7",
+                    start: "top center",
+                    end: "center center",
+                    scrub: 1.5,
+                },
+            })
+                .to("#outrobig", {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    ease: "back.out(1.5)",
+                    duration: 2,
+                })
+                .to(
+                    "#outrosub",
+                    {
+                        opacity: 1,
+                        duration: 0.5,
+                    },
+                    "-=0.3",
+                );
+
+            ScrollTrigger.refresh();
+        </script>
+    </body>
+</html>

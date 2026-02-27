@@ -34,8 +34,6 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 onMounted(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     document.querySelectorAll(".box2").forEach((box) => {
         gsap.fromTo(
             box,
@@ -70,7 +68,10 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
+
 .slide-sections-root {
     background: #111;
 }
@@ -94,6 +95,10 @@ section {
     color: white;
     background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #0d4d6a 100%);
     transform: translateX(-100vw);
+
+    @include mobile {
+        padding: $content-gap-mobile $content-padding-x-mobile;
+    }
 }
 .box2 h3 {
     font-size: 2.5rem;

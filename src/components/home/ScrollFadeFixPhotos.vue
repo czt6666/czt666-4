@@ -1,9 +1,5 @@
 <template>
-    <div
-        class="scroll-fade-photos"
-        ref="wrapperRef"
-        :style="{ '--n': photoIds.length }"
-    >
+    <div class="scroll-fade-photos" ref="wrapperRef" :style="{ '--n': photoIds.length }">
         <div class="sticky-viewport">
             <div
                 v-for="(id, index) in photoIds"
@@ -25,8 +21,6 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 
 const photoIds = ref([1021, 1025, 1035, 1043, 1045]);
 const wrapperRef = ref(null);
-
-gsap.registerPlugin(ScrollTrigger);
 
 onMounted(() => {
     const wrapper = wrapperRef.value;

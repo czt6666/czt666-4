@@ -24,14 +24,14 @@
         <div class="container">
             <div class="boxes">
                 <div class="box box-alt">
-                    <span class="box-title">更多项目</span>
+                    <span class="box-title">11</span>
                     <span class="box-desc">持续更新中</span>
                 </div>
-                <div class="box box-alt"></div>
-                <div class="box box-alt"></div>
+                <div class="box box-alt">22</div>
+                <div class="box box-alt">33</div>
             </div>
             <div class="text">
-                <h2>网页与交互</h2>
+                <h2>国内Top景观</h2>
                 <p>从界面到动效，关注细节与体验。</p>
             </div>
         </div>
@@ -41,11 +41,8 @@
 <script setup>
 import { onMounted } from "vue";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 
 onMounted(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     const boxes = document.querySelectorAll(".box");
     boxes.forEach((box) => {
         gsap.to(box, {
@@ -63,15 +60,16 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
+
 .container-wrapper {
     background: #000;
 }
 
 .container {
     display: flex;
-    /* height: 1872px; */
-    /* height: 100vh; */
     position: relative;
 }
 
