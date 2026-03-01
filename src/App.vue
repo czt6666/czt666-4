@@ -13,7 +13,7 @@ import { useIsMobile } from "@/composables/useIsMobile";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-const { isMobile } = useIsMobile();
+const isMobile = useIsMobile();
 provide("isMobile", isMobile);
 </script>
 

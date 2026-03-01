@@ -31,9 +31,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, inject, onMounted, onBeforeUnmount } from "vue";
 
-const slides = ref([
+// PC 端轮播项（大图 1920×1080）
+const slidesPC = [
     { id: 1015, title: "光影", shootDate: "2024.03.15" },
     { id: 1018, title: "瞬间", shootDate: "2024.04.02" },
     { id: 1022, title: "远山", shootDate: "2024.04.18" },
@@ -44,16 +45,34 @@ const slides = ref([
     { id: 1039, title: "窗景", shootDate: "2024.07.14" },
     { id: 1043, title: "暮色", shootDate: "2024.08.01" },
     { id: 1045, title: "静物", shootDate: "2024.08.19" },
-]);
+];
+// 移动端轮播项（可换 id 或尺寸，这里用竖版 768×1024）
+const slidesMobile = [
+    { id: 1015, title: "光影", shootDate: "2024.03.15" },
+    { id: 1018, title: "瞬间", shootDate: "2024.04.02" },
+    { id: 1022, title: "远山", shootDate: "2024.04.18" },
+    { id: 1024, title: "城市", shootDate: "2024.05.06" },
+    { id: 1025, title: "海岸", shootDate: "2024.05.22" },
+    { id: 1031, title: "森林", shootDate: "2024.06.10" },
+    { id: 1035, title: "街道", shootDate: "2024.06.28" },
+    { id: 1039, title: "窗景", shootDate: "2024.07.14" },
+    { id: 1043, title: "暮色", shootDate: "2024.08.01" },
+    { id: 1045, title: "静物", shootDate: "2024.08.19" },
+];
+
+const isMobile = inject("isMobile");
+const slides = computed(() => (isMobile.value ? slidesMobile : slidesPC));
 
 const currentIndex = ref(0);
 let autoplayTimer = null;
 const autoplayDelay = 5000;
 
+const imageSize = computed(() => (isMobile.value ? "768/1024" : "1920/1080"));
+
 function getSlideStyle(slide) {
-    const url =
-        typeof slide.id === "number" ? `https://picsum.photos/id/${slide.id}/1920/1080` : slide.id;
-    return { backgroundImage: `url(${url})` };
+    const base = typeof slide.id === "number" ? `https://picsum.photos/id/${slide.id}/` : "";
+    const url = base ? base + imageSize.value : slide.id;
+    return { backgroundImage: url ? `url(${url})` : "" };
 }
 
 function goTo(index) {

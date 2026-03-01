@@ -22,7 +22,6 @@
 <script setup>
 import { ref } from "vue";
 
-const imageUrl = "https://picsum.photos/id/1063/1920/1080";
 const title = "CZT666.CN";
 const chars = ref(title.split(""));
 const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100));
@@ -30,10 +29,15 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
 
 <style lang="scss" scoped>
 @use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
 
 .footer-bg {
     width: 100%;
     height: $footer-height;
+
+    @include mobile {
+        height: $footer-height-mobile;
+    }
 }
 
 .footer-content {
@@ -48,6 +52,10 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
     align-items: center;
     justify-content: center;
     overflow: hidden;
+
+    @include mobile {
+        height: $footer-height-mobile;
+    }
 
     img {
         width: 100%;
@@ -66,7 +74,7 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 48px;
+    font-size: clamp(64px, 10vw, 108px);
     font-weight: 800;
     letter-spacing: 0.08em;
     color: #fff;
@@ -133,7 +141,7 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    font-size: 48px;
+    font-size: clamp(64px, 10vw, 108px);
     font-weight: 800;
     letter-spacing: 0.08em;
     color: transparent;
@@ -171,7 +179,7 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 0;
-    font-size: 48px;
+    font-size: clamp(64px, 10vw, 108px);
     font-weight: 800;
     letter-spacing: 0.08em;
     color: transparent;

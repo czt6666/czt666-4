@@ -42,7 +42,7 @@ onMounted(() => {
 .photo-grid {
     overflow-x: hidden;
     width: 100%;
-    height: calc(50vw + 50vh);
+    height: calc(50vw + 50vh + 40px);
     background: #111;
     color: #fff;
     margin-bottom: -40px;

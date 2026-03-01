@@ -20,12 +20,20 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, inject, ref } from "vue";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+
+const isMobile = inject("isMobile");
 
 onMounted(() => {
+    const trigger = document.querySelector("#travel-route");
+    if (!trigger) return;
     const sections = gsap.utils.toArray(".panel");
+    // 移动端加长滚动距离，避免滚得太快（约 2.5 倍）
+    const getEnd = () => {
+        const w = trigger.getBoundingClientRect().width;
+        return "+=" + (isMobile.value ? w * 2.5 : w);
+    };
 
     gsap.to(sections, {
         xPercent: -100 * (sections.length - 1),
@@ -35,7 +43,7 @@ onMounted(() => {
             pin: true,
             scrub: 1,
             snap: 1 / (sections.length - 1),
-            end: () => "+=" + document.querySelector("#travel-route").offsetWidth,
+            end: getEnd,
         },
     });
 });

@@ -20,44 +20,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, inject, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-// 组件内部维护：照片列表（picsum id）与每段滚动像素（移动端用更短段高）
-const photos = ref([1069, 1071, 1073, 1075, 1077, 1079, 1081, 1083]);
-const segmentPx = ref(500);
-const segmentPxMobile = 320;
+// PC 端照片列表（picsum id，大图 1920×1080）
+const photosPC = [1069, 1071, 1073, 1075, 1077, 1079, 1081, 1083];
+// 移动端照片列表（可换 id 或数量，小图 768×1024）
+const photosMobile = [1069, 1071, 1073, 1075, 1077, 1079, 1081, 1083];
 
+const isMobile = inject("isMobile");
+const photos = computed(() => (isMobile.value ? photosMobile : photosPC));
+
+const segmentPxMobile = 320;
+const segmentPx = computed(() => (isMobile.value ? segmentPxMobile : 500));
 const wrapperRef = ref(null);
 
+const imageSize = computed(() => (isMobile.value ? "768/1024" : "1920/1080"));
+
 function getLayerStyle(photo) {
-    const url = typeof photo === "number" ? `https://picsum.photos/id/${photo}/1920/1080` : photo;
-    return {
-        backgroundImage: `url(${url})`,
-    };
+    const url =
+        typeof photo === "number" ? `https://picsum.photos/id/${photo}/${imageSize.value}` : photo;
+    return { backgroundImage: `url(${url})` };
 }
 
-const isMobile = () => window.innerWidth < 768;
-const updateSegment = () => {
-    segmentPx.value = isMobile() ? segmentPxMobile : 500;
-};
-
 onMounted(() => {
-    updateSegment();
-    window.addEventListener("resize", updateSegment);
-
     const wrapper = wrapperRef.value;
     if (!wrapper || photos.value.length < 2) return;
 
     const layers = wrapper.querySelectorAll(".photo-layer");
     const n = layers.length;
-    const segment = 1 / (n - 1); // 0~1 的进度被分成 n-1 段
+    const segment = 1 / (n - 1); // 每段占整段滚动的比例
+    const fadeRatio = 0.5; // 只用一半滚动做 fade，前半段保持 opacity=1
 
     const tl = gsap.timeline();
     for (let i = 0; i < n - 1; i++) {
-        tl.to(layers[i], { opacity: 0, duration: segment }, i * segment);
-        tl.to(layers[i + 1], { opacity: 1, duration: segment }, i * segment);
+        const fadeStart = i * segment + segment * (1 - fadeRatio);
+        const fadeDuration = segment * fadeRatio;
+        tl.to(layers[i], { opacity: 0, duration: fadeDuration }, fadeStart);
+        tl.to(layers[i + 1], { opacity: 1, duration: fadeDuration }, fadeStart);
     }
 
     ScrollTrigger.create({
@@ -67,10 +68,6 @@ onMounted(() => {
         scrub: true,
         animation: tl,
     });
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener("resize", updateSegment);
 });
 </script>
 
