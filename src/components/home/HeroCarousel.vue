@@ -12,26 +12,42 @@
             </div>
         </div>
 
-        <nav class="accordion-nav" aria-label="轮播切换">
+        <div class="accordion-shell" :class="{ 'is-collapsed': isMobileView && isNavCollapsed }">
+            <nav class="accordion-nav" aria-label="轮播切换">
+                <button
+                    v-for="(slide, index) in slides"
+                    :key="index"
+                    type="button"
+                    class="accordion-btn"
+                    :class="{ active: index === currentIndex }"
+                    :aria-label="slide.title"
+                    @mouseenter="goTo(index)"
+                    @click="goTo(index)"
+                >
+                    <span class="accordion-title">{{ slide.title }}</span>
+                    <span class="accordion-subtitle">{{ slide.shootDate }}</span>
+                </button>
+            </nav>
+
             <button
-                v-for="(slide, index) in slides"
-                :key="index"
+                v-if="isMobileView"
                 type="button"
-                class="accordion-btn"
-                :class="{ active: index === currentIndex }"
-                :aria-label="slide.title"
-                @mouseenter="goTo(index)"
-                @click="goTo(index)"
+                class="accordion-toggle"
+                :class="{ 'is-collapsed': isNavCollapsed }"
+                :aria-label="isNavCollapsed ? '展开轮播侧栏' : '收起轮播侧栏'"
+                @click="toggleMobileNav"
             >
-                <span class="accordion-title">{{ slide.title }}</span>
-                <span class="accordion-subtitle">{{ slide.shootDate }}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 6 L11 12 L5 18" />
+                    <path d="M13 6 L19 12 L13 18" />
+                </svg>
             </button>
-        </nav>
+        </div>
     </section>
 </template>
 
 <script setup>
-import { ref, computed, inject, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, inject, onMounted, onBeforeUnmount, watch } from "vue";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 // PC 端轮播项（大图 1920×1080）
@@ -56,17 +72,27 @@ const slidesMobile = [
     { src: "0top/index-5m.jpg", title: "桃花", shootDate: "2024.05.22" },
     { src: "0top/index-6m.jpg", title: "森林", shootDate: "2024.06.10" },
     { src: "0top/index-7m.jpg", title: "飞机", shootDate: "2024.06.28" },
-    { src: "0top/index-8m.jpg", title: "航展", shootDate: "2024.07.14" },
+    { src: "0top/index-8m.jpg", title: "建筑", shootDate: "2024.07.14" },
     { src: "0top/index-9m.jpg", title: "香港", shootDate: "2024.08.01" },
     { src: "0top/index-10m.jpg", title: "水杉", shootDate: "2024.08.19" },
 ];
 
 const isMobile = inject("isMobile");
+const isMobileView = computed(() => Boolean(isMobile?.value));
 const slides = computed(() => (isMobile.value ? slidesMobile : slidesPC));
 
 const currentIndex = ref(0);
+const isNavCollapsed = ref(false);
 let autoplayTimer = null;
 const autoplayDelay = 5000;
+
+watch(
+    isMobileView,
+    () => {
+        isNavCollapsed.value = false;
+    },
+    { immediate: true },
+);
 
 function goTo(index) {
     currentIndex.value = index;
@@ -80,6 +106,10 @@ function next() {
 function resetAutoplay() {
     if (autoplayTimer) clearInterval(autoplayTimer);
     autoplayTimer = setInterval(next, autoplayDelay);
+}
+
+function toggleMobileNav() {
+    isNavCollapsed.value = !isNavCollapsed.value;
 }
 
 onMounted(() => {
@@ -135,13 +165,14 @@ onBeforeUnmount(() => {
     pointer-events: none;
 }
 
-.accordion-nav {
+.accordion-shell {
     position: absolute;
     top: 50%;
     right: 56px;
     z-index: 10;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 10px;
     transform: translateY(-50%);
 
@@ -149,6 +180,52 @@ onBeforeUnmount(() => {
         right: $content-padding-x-mobile;
         gap: 8px;
     }
+}
+
+.accordion-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition:
+        transform 0.3s ease,
+        opacity 0.25s ease;
+
+    @include mobile {
+        gap: 8px;
+    }
+}
+
+.accordion-toggle {
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: rgba(8, 10, 16, 0.45);
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    cursor: pointer;
+}
+
+.accordion-toggle svg {
+    width: 18px;
+    height: 18px;
+    stroke: rgba(255, 255, 255, 0.92);
+    stroke-width: 2;
+    fill: none;
+    transition: transform 0.28s ease;
+}
+
+.accordion-toggle.is-collapsed svg {
+    transform: rotate(180deg);
+}
+
+.accordion-shell.is-collapsed .accordion-nav {
+    transform: translateX(calc(100% + 14px));
+    opacity: 0;
+    pointer-events: none;
 }
 
 .accordion-btn {

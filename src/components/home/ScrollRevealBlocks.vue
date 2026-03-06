@@ -7,10 +7,7 @@
             </div>
             <div class="boxes project-cards">
                 <div v-for="(item, index) in projectItems" :key="index" class="box project-card">
-                    <div
-                        class="project-cover"
-                        v-lazy-image:bg="item.cover"
-                    >
+                    <div class="project-cover" v-lazy-image:bg="item.cover">
                         <span class="project-index">{{ `0${index + 1}` }}</span>
                     </div>
                     <div class="project-content">
@@ -62,21 +59,21 @@ const projectItems = computed(() => {
     return [
         {
             title: "国内ChatGPT",
-            desc: "AI 对话与工具集合，统一入口与清晰信息层级。",
+            desc: "开箱即用的免费ChatGPT AI聊天网站",
             href: "https://czt666.cn/gpt",
             cta: "查看项目",
             cover: resolveStaticAssetUrl(`00frontend/gpt${suffix}.jpg`),
         },
         {
             title: "地图相册",
-            desc: "按地理位置整理旅途内容，卡片与地图联动浏览。",
+            desc: "在地图上查看旅行照片",
             href: "https://czt666.cn/map",
             cta: "查看项目",
             cover: resolveStaticAssetUrl(`00frontend/map${suffix}.jpg`),
         },
         {
             title: "留言墙",
-            desc: "轻互动留言体验，支持内容沉淀与情绪化表达。",
+            desc: "互动留言体验",
             href: "https://czt666.cn/lyq",
             cta: "查看项目",
             cover: resolveStaticAssetUrl(`00frontend/lyq${suffix}.jpg`),
@@ -88,24 +85,22 @@ const destinations = ref([
     {
         key: "1xinjiang",
         title: "新疆",
-        desc: "雪山、草原与胡杨林，昼夜温差带来的色彩变化。",
+        desc: "雪山、草原、戈壁，昼夜温差带来的色彩变化",
     },
     {
         key: "2guangxi",
         title: "广西",
-        desc: "喀斯特山水、梯田与海岸线，云雾与光影交织。",
+        desc: "喀斯特山水、海岸线、云海，云雾与流光交织",
     },
     {
         key: "3neimeng",
-        forder: "",
         title: "内蒙",
-        desc: "草原、沙地与星空，地平线拉得很长。",
+        desc: "星空、草原与沙地，地平线拉得很长。",
     },
     {
         key: "4hongkong",
-        forder: "",
         title: "香港",
-        desc: "山城、海湾与夜色霓虹，立体的城市切片。",
+        desc: "山城、海湾、城市夜景，立体的城市切片。",
     },
 ]);
 
@@ -150,7 +145,6 @@ onMounted(() => {
 function getDestImageSrc(destKey, imageIndex) {
     return resolveStaticAssetUrl(`${destKey}/top/top-${imageIndex}.jpg`);
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -182,12 +176,25 @@ function getDestImageSrc(destKey, imageIndex) {
     color: azure;
 
     h2 {
-        font-size: 120px;
+        font-size: clamp(48px, 7vw, 120px);
+        line-height: 1.05;
+        letter-spacing: 0.02em;
         text-align: center;
+
+        @include mobile {
+            font-size: clamp(28px, 10vw, 44px);
+        }
     }
     span {
         display: block;
         margin-top: 12px;
+        font-size: clamp(14px, 1.2vw, 20px);
+        line-height: 1.5;
+
+        @include mobile {
+            font-size: clamp(12px, 3.6vw, 16px);
+            margin-top: 8px;
+        }
     }
 
     p {

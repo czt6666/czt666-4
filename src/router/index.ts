@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
+import ComingSoonPage from '@/views/ComingSoonPage.vue'
 
 const pages = import.meta.glob('../views/test/**/*.vue')
 
@@ -29,6 +30,30 @@ const routes = [
     path: '/',
     name: 'HomePage',
     component: HomePage,
+  },
+  {
+    path: '/portfolio',
+    name: 'PortfolioPage',
+    component: ComingSoonPage,
+    meta: { title: '作品集' },
+  },
+  {
+    path: '/frontend-works',
+    name: 'FrontendWorksPage',
+    component: ComingSoonPage,
+    meta: { title: '前端作品' },
+  },
+  {
+    path: '/travel-journey',
+    name: 'TravelJourneyPage',
+    component: ComingSoonPage,
+    meta: { title: '旅游经历' },
+  },
+  {
+    path: '/photo-wall',
+    name: 'PhotoWallPage',
+    component: ComingSoonPage,
+    meta: { title: '照片墙' },
   },
   {
     path: '/test',

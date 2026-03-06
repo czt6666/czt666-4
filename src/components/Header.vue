@@ -8,7 +8,7 @@
         }"
     >
         <div class="container">
-            <RouterLink to="/" class="logo" @click="menuOpen = false">作品集</RouterLink>
+            <RouterLink to="/portfolio" class="logo" @click="menuOpen = false">作品集</RouterLink>
             <button
                 type="button"
                 class="menu-trigger"
@@ -21,13 +21,20 @@
                 <span class="line" />
             </button>
             <nav class="right" :aria-hidden="!menuOpen">
-                <RouterLink :to="{ path: '/', hash: '#frontend' }" @click="menuOpen = false">前端作品</RouterLink>
-                <RouterLink :to="{ path: '/', hash: '#travel-story' }" @click="menuOpen = false">旅游经历</RouterLink>
-                <RouterLink :to="{ path: '/', hash: '#photo' }" @click="menuOpen = false">照片墙</RouterLink>
-                <RouterLink to="/old" class="old-version" title="旧版" @click="menuOpen = false">
+                <RouterLink to="/frontend-works" @click="menuOpen = false">前端作品</RouterLink>
+                <RouterLink to="/travel-journey" @click="menuOpen = false">旅游经历</RouterLink>
+                <RouterLink to="/photo-wall" @click="menuOpen = false">照片墙</RouterLink>
+                <a
+                    href="https://czt666.cn"
+                    class="old-version"
+                    title="旧版"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    @click="menuOpen = false"
+                >
                     <span class="old-version-text">旧版</span>
                     <span class="old-version-logo" aria-hidden="true">↗</span>
-                </RouterLink>
+                </a>
             </nav>
         </div>
         <div class="nav-overlay" aria-hidden="true" @click="menuOpen = false" />
@@ -116,13 +123,15 @@ onBeforeUnmount(() => {
         z-index: -1;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.25s ease, visibility 0.25s ease;
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
     }
     .nav-bar.menu-open & {
         @include mobile {
             opacity: 1;
             visibility: visible;
-            z-index: 998;
+            z-index: 1000;
         }
     }
 }
@@ -190,7 +199,9 @@ onBeforeUnmount(() => {
             height: 2px;
             background: currentColor;
             border-radius: 1px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition:
+                transform 0.3s ease,
+                opacity 0.3s ease;
         }
 
         .nav-bar.menu-open & .line:nth-child(1) {
@@ -225,8 +236,11 @@ onBeforeUnmount(() => {
             opacity: 0;
             visibility: hidden;
             transform: translateX(100%);
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            z-index: 997;
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease,
+                transform 0.3s ease;
+            z-index: 1001;
             border-left: 1px solid rgba(255, 255, 255, 0.08);
         }
 

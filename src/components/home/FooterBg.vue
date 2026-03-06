@@ -103,11 +103,7 @@ const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");
     font-size: 150px;
     font-weight: 800;
     letter-spacing: 0.08em;
-    font-family:
-        "Segoe UI",
-        "Helvetica Neue",
-        Arial,
-        sans-serif;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 .footer-title-stroke {
@@ -125,8 +121,7 @@ const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");
 .footer-title-fill {
     fill: rgba(245, 252, 255, 0.96);
     opacity: 0;
-    filter:
-        drop-shadow(0 0 12px rgba(137, 214, 255, 0.42))
+    filter: drop-shadow(0 0 12px rgba(137, 214, 255, 0.42))
         drop-shadow(0 2px 12px rgba(0, 0, 0, 0.35));
     animation: fill-reveal 6.4s ease-in-out infinite;
 }
@@ -180,7 +175,7 @@ const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");
 
     .footer-title-stroke,
     .footer-title-fill {
-        font-size: 138px;
+        font-size: 175px;
         letter-spacing: 0.06em;
     }
 }

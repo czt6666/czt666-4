@@ -79,10 +79,14 @@ onMounted(() => {
     const trigger = document.querySelector("#travel-route");
     if (!trigger) return;
     const sections = gsap.utils.toArray(".panel");
-    // 移动端加长滚动距离，避免滚得太快（约 2.5 倍）
+    const segmentCount = sections.length - 1;
+    const step = 1 / segmentCount;
+    const snapThreshold = step * 0.12; // 低阈值：仅非常接近时才轻微吸附
+    // 拉长滚动距离，降低灵敏度，整体仍保持连续滚动
     const getEnd = () => {
         const w = trigger.getBoundingClientRect().width - 1;
-        return "+=" + (isMobile.value ? w * 2.5 : w);
+        const distanceFactor = isMobile.value ? 2.5 : 1.35;
+        return "+=" + w * distanceFactor;
     };
 
     gsap.to(sections, {
@@ -91,8 +95,17 @@ onMounted(() => {
         scrollTrigger: {
             trigger: "#travel-route",
             pin: true,
-            scrub: 1,
-            snap: 1 / (sections.length - 1),
+            scrub: 0.7,
+            snap: {
+                snapTo: (progress) => {
+                    const nearest = Math.round(progress / step) * step;
+                    return Math.abs(nearest - progress) <= snapThreshold ? nearest : progress;
+                },
+                delay: 0.02,
+                duration: { min: 0.05, max: 0.12 },
+                ease: "power1.out",
+                inertia: false,
+            },
             end: getEnd,
         },
     });
