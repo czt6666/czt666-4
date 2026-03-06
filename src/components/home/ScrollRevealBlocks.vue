@@ -2,45 +2,110 @@
     <div class="container-wrapper" id="frontend">
         <div class="container">
             <div class="text">
-                <h2>前端作品</h2>
-                <p>网站、后台、H5 与组件库等实践项目，随滚动逐一呈现。</p>
+                <h2>前端<br />作品</h2>
+                <!-- <p class="sync-title">{{ activeDestination.title }}</p> -->
             </div>
-            <div class="boxes">
-                <div class="box">
-                    <span class="box-title">企业官网</span>
-                    <span class="box-desc">Vue3 + 响应式</span>
-                </div>
-                <div class="box">
-                    <span class="box-title">管理后台</span>
-                    <span class="box-desc">Element Plus · 数据看板</span>
-                </div>
-                <div class="box">
-                    <span class="box-title">H5 活动页</span>
-                    <span class="box-desc">动效与适配</span>
+            <div class="boxes project-cards">
+                <div v-for="(item, index) in projectItems" :key="index" class="box project-card">
+                    <div class="project-cover" :style="{ background: item.cover }">
+                        <span class="project-index">{{ `0${index + 1}` }}</span>
+                    </div>
+                    <div class="project-content">
+                        <span class="box-title">{{ item.title }}</span>
+                        <span class="box-desc">{{ item.desc }}</span>
+                        <a :href="item.href" target="_blank" class="box-cta">{{ item.cta }}</a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="container">
             <div class="boxes">
-                <div class="box box-alt">
-                    <span class="box-title">11</span>
-                    <span class="box-desc">持续更新中</span>
+                <div
+                    v-for="(dest, index) in destinations"
+                    :key="dest.key"
+                    class="box dest-block"
+                    :data-index="index"
+                >
+                    <div class="dest-grid">
+                        <div
+                            v-for="n in 12"
+                            :style="{
+                                backgroundImage: `url(src/assets/static/${dest.key}/top/top-${n}.jpg)`,
+                            }"
+                            :key="n"
+                        ></div>
+                    </div>
                 </div>
-                <div class="box box-alt">22</div>
-                <div class="box box-alt">33</div>
             </div>
             <div class="text">
-                <h2>国内Top景观</h2>
-                <p>从界面到动效，关注细节与体验。</p>
+                <h2>{{ activeDestination.title }}</h2>
+                <span>{{ activeDestination.desc }}</span>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const projectItems = [
+    {
+        title: "国内ChatGPT",
+        desc: "AI 对话与工具集合，统一入口与清晰信息层级。",
+        href: "https://czt666.cn/gpt",
+        cta: "查看项目",
+        cover: "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    },
+    {
+        title: "地图相册",
+        desc: "按地理位置整理旅途内容，卡片与地图联动浏览。",
+        href: "https://czt666.cn/map",
+        cta: "查看项目",
+        cover: "linear-gradient(135deg, #1f4037 0%, #99f2c8 100%)",
+    },
+    {
+        title: "留言墙",
+        desc: "轻互动留言体验，支持内容沉淀与情绪化表达。",
+        href: "https://czt666.cn/lyq",
+        cta: "查看项目",
+        cover: "linear-gradient(135deg, #42275a 0%, #734b6d 100%)",
+    },
+];
+
+const destinations = ref([
+    {
+        key: "1xinjiang",
+        title: "新疆",
+        desc: "雪山、草原与胡杨林，昼夜温差带来的色彩变化。",
+    },
+    {
+        key: "2guangxi",
+        title: "广西",
+        desc: "喀斯特山水、梯田与海岸线，云雾与光影交织。",
+    },
+    {
+        key: "3neimeng",
+        forder: "",
+        title: "内蒙",
+        desc: "草原、沙地与星空，地平线拉得很长。",
+    },
+    {
+        key: "4hongkong",
+        forder: "",
+        title: "香港",
+        desc: "山城、海湾与夜色霓虹，立体的城市切片。",
+    },
+]);
+
+const activeIndex = ref(0);
+const activeDestination = computed(
+    () => destinations.value[activeIndex.value] ?? destinations.value[0],
+);
 
 onMounted(() => {
     const boxes = document.querySelectorAll(".box");
@@ -57,6 +122,22 @@ onMounted(() => {
             },
         });
     });
+
+    // 根据滚动位置切换左侧标题为当前地点
+    const destBlocks = document.querySelectorAll(".dest-block");
+    destBlocks.forEach((block, index) => {
+        ScrollTrigger.create({
+            trigger: block,
+            start: "top 65%",
+            end: "bottom 35%",
+            onEnter: () => {
+                activeIndex.value = index;
+            },
+            onEnterBack: () => {
+                activeIndex.value = index;
+            },
+        });
+    });
 });
 </script>
 
@@ -65,10 +146,12 @@ onMounted(() => {
 @use "@/styles/mixins.scss" as *;
 
 .container-wrapper {
+    width: 100%;
     background: #000;
 }
 
 .container {
+    width: 100%;
     display: flex;
     position: relative;
 }
@@ -81,9 +164,26 @@ onMounted(() => {
     left: 0;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    background: rgba(254, 197, 99, 0.8);
-    border-right: 2px solid #444;
+    justify-content: center;
+    color: azure;
+
+    h2 {
+        font-size: 120px;
+        text-align: center;
+    }
+    span {
+        display: block;
+        margin-top: 12px;
+    }
+
+    p {
+        margin-top: 12px;
+        color: rgba(240, 255, 255, 0.85);
+        letter-spacing: 0.02em;
+        font-size: 1.1rem;
+    }
 }
 
 .boxes {
@@ -96,28 +196,108 @@ onMounted(() => {
     margin-bottom: 36px;
     opacity: 0;
     transform: scale(0.95);
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 24px;
     color: #fff;
 
     &:last-child {
         margin-bottom: 0;
     }
 }
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, #101010 0%, #080808 100%);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.project-cover {
+    width: 100%;
+    flex: 1 1 0;
+    border-radius: 14px;
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.project-index {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 0.8rem;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    padding: 8px 10px;
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(10, 10, 10, 0.35);
+    backdrop-filter: blur(6px);
+}
+
+.project-content {
+    padding: 20px 8px 6px;
+    display: flex;
+    flex-direction: column;
+}
+
 .box-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.box-cta {
+    font-size: 0.92rem;
+    opacity: 0.92;
+    margin-top: 14px;
+    color: #d4f4ff;
+    letter-spacing: 0.04em;
 }
 .box-desc {
-    font-size: 0.95rem;
-    opacity: 0.9;
-    margin-top: 4px;
+    font-size: 0.96rem;
+    opacity: 0.84;
+    margin-top: 10px;
+    line-height: 1.7;
 }
-.box-alt {
-    background: linear-gradient(135deg, #2d1f4e 0%, #4a3a6b 100%);
+
+.sync-title {
+    min-height: 1.8em;
+}
+
+.dest-grid {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap: 8px;
+    border-radius: 20px;
+
+    // 小屏：2 x 6
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+
+    // 中小屏：3 x 4
+    @media (min-width: 700px) and (max-width: 1365px) {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    // 中等/桌面：4 x 3
+    @media (min-width: 1366px) {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+
+    div {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }
 </style>

@@ -35,29 +35,29 @@ import { ref, computed, inject, onMounted, onBeforeUnmount } from "vue";
 
 // PC 端轮播项（大图 1920×1080）
 const slidesPC = [
-    { id: 1015, title: "光影", shootDate: "2024.03.15" },
-    { id: 1018, title: "瞬间", shootDate: "2024.04.02" },
-    { id: 1022, title: "远山", shootDate: "2024.04.18" },
-    { id: 1024, title: "城市", shootDate: "2024.05.06" },
-    { id: 1025, title: "海岸", shootDate: "2024.05.22" },
-    { id: 1031, title: "森林", shootDate: "2024.06.10" },
-    { id: 1035, title: "街道", shootDate: "2024.06.28" },
-    { id: 1039, title: "窗景", shootDate: "2024.07.14" },
-    { id: 1043, title: "暮色", shootDate: "2024.08.01" },
-    { id: 1045, title: "静物", shootDate: "2024.08.19" },
+    { src: "src/assets/static/0top/index-1.jpg", title: "晨曦", shootDate: "2024.03.15" },
+    { src: "src/assets/static/0top/index-2.jpg", title: "繁星", shootDate: "2024.04.02" },
+    { src: "src/assets/static/0top/index-3.jpg", title: "星轨", shootDate: "2024.04.18" },
+    { src: "src/assets/static/0top/index-4.jpg", title: "荷花", shootDate: "2024.05.06" },
+    { src: "src/assets/static/0top/index-5.jpg", title: "盐湖", shootDate: "2024.05.22" },
+    { src: "src/assets/static/0top/index-6.jpg", title: "森林", shootDate: "2024.06.10" },
+    { src: "src/assets/static/0top/index-7.jpg", title: "飞机", shootDate: "2024.06.28" },
+    { src: "src/assets/static/0top/index-8.jpg", title: "雪山", shootDate: "2024.07.14" },
+    { src: "src/assets/static/0top/index-9.jpg", title: "大桥", shootDate: "2024.08.01" },
+    { src: "src/assets/static/0top/index-10.jpg", title: "日出", shootDate: "2024.08.19" },
 ];
 // 移动端轮播项（可换 id 或尺寸，这里用竖版 768×1024）
 const slidesMobile = [
-    { id: 1015, title: "光影", shootDate: "2024.03.15" },
-    { id: 1018, title: "瞬间", shootDate: "2024.04.02" },
-    { id: 1022, title: "远山", shootDate: "2024.04.18" },
-    { id: 1024, title: "城市", shootDate: "2024.05.06" },
-    { id: 1025, title: "海岸", shootDate: "2024.05.22" },
-    { id: 1031, title: "森林", shootDate: "2024.06.10" },
-    { id: 1035, title: "街道", shootDate: "2024.06.28" },
-    { id: 1039, title: "窗景", shootDate: "2024.07.14" },
-    { id: 1043, title: "暮色", shootDate: "2024.08.01" },
-    { id: 1045, title: "静物", shootDate: "2024.08.19" },
+    { src: "src/assets/static/0top/index-1.jpg", title: "晨曦", shootDate: "2024.03.15" },
+    { src: "src/assets/static/0top/index-2.jpg", title: "繁星", shootDate: "2024.04.02" },
+    { src: "src/assets/static/0top/index-3m.jpg", title: "星轨", shootDate: "2024.04.18" },
+    { src: "src/assets/static/0top/index-4m.jpg", title: "荷花", shootDate: "2024.05.06" },
+    { src: "src/assets/static/0top/index-5m.jpg", title: "盐湖", shootDate: "2024.05.22" },
+    { src: "src/assets/static/0top/index-6m.jpg", title: "森林", shootDate: "2024.06.10" },
+    { src: "src/assets/static/0top/index-7m.jpg", title: "飞机", shootDate: "2024.06.28" },
+    { src: "src/assets/static/0top/index-8m.jpg", title: "雪山", shootDate: "2024.07.14" },
+    { src: "src/assets/static/0top/index-9m.jpg", title: "大桥", shootDate: "2024.08.01" },
+    { src: "src/assets/static/0top/index-10m.jpg", title: "日出", shootDate: "2024.08.19" },
 ];
 
 const isMobile = inject("isMobile");
@@ -70,9 +70,8 @@ const autoplayDelay = 5000;
 const imageSize = computed(() => (isMobile.value ? "768/1024" : "1920/1080"));
 
 function getSlideStyle(slide) {
-    const base = typeof slide.id === "number" ? `https://picsum.photos/id/${slide.id}/` : "";
-    const url = base ? base + imageSize.value : slide.id;
-    return { backgroundImage: url ? `url(${url})` : "" };
+    const src = slide.src;
+    return { backgroundImage: `url(${src})` };
 }
 
 function goTo(index) {

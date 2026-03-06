@@ -1,29 +1,76 @@
 <template>
     <section class="wrapper" id="travel-route">
-        <div class="panel p1">
-            <h2>川西环线</h2>
-            <p>成都 — 四姑娘山 — 丹巴 — 新都桥 — 稻城亚丁 — 理塘</p>
-        </div>
-        <div class="panel p2">
-            <h2>云南 · 大理丽江</h2>
-            <p>洱海、苍山、古城、泸沽湖</p>
-        </div>
-        <div class="panel p3">
-            <h2>西藏</h2>
-            <p>拉萨 — 林芝 — 纳木错 — 珠峰大本营</p>
-        </div>
-        <div class="panel p4">
-            <h2>江南水乡</h2>
-            <p>杭州 — 乌镇 — 西塘 — 苏州</p>
+        <div v-for="panel in seasonPanels" :key="panel.key" class="panel" :class="panel.className">
+            <div class="grid">
+                <div
+                    v-for="image in panel.images"
+                    :key="`${panel.key}-${image.position}`"
+                    class="cell"
+                    :style="{ backgroundImage: `url(${image.src})` }"
+                ></div>
+
+                <div class="center">
+                    <h2>{{ panel.title }}</h2>
+                    <p>{{ panel.desc }}</p>
+                </div>
+            </div>
         </div>
     </section>
 </template>
 
 <script setup>
-import { onMounted, inject, ref } from "vue";
+import { onMounted, inject, computed } from "vue";
 import gsap from "gsap";
 
 const isMobile = inject("isMobile");
+const seasonBasePath = "src/assets/static/5beijing";
+
+const basePanels = [
+    {
+        key: "spring",
+        className: "p1",
+        folder: "0spring",
+        title: "北京 · 春",
+        desc: "玉兰初绽，风里有花香。",
+    },
+    {
+        key: "summer",
+        className: "p2",
+        folder: "3summer",
+        title: "北京 · 夏",
+        desc: "绿荫渐深，骤雨后天色清亮。",
+    },
+    {
+        key: "autumn",
+        className: "p3",
+        folder: "1autumn",
+        title: "北京 · 秋",
+        desc: "银杏与红叶，把街道染成金黄。",
+    },
+    {
+        key: "winter",
+        className: "p4",
+        folder: "2winter",
+        title: "北京 · 冬",
+        desc: "雪落城墙，空气清冽而安静。",
+    },
+];
+const seasonPanels = computed(() => {
+    return basePanels.map((panel) => {
+        const images = Array.from({ length: 12 }, (_, idx) => {
+            const imageIndex = idx + 1;
+            return {
+                position: imageIndex,
+                src: `${seasonBasePath}/${panel.folder}/top/top-${imageIndex}.jpg`,
+            };
+        });
+
+        return {
+            ...panel,
+            images,
+        };
+    });
+});
 
 onMounted(() => {
     const trigger = document.querySelector("#travel-route");
@@ -31,7 +78,7 @@ onMounted(() => {
     const sections = gsap.utils.toArray(".panel");
     // 移动端加长滚动距离，避免滚得太快（约 2.5 倍）
     const getEnd = () => {
-        const w = trigger.getBoundingClientRect().width;
+        const w = trigger.getBoundingClientRect().width - 1;
         return "+=" + (isMobile.value ? w * 2.5 : w);
     };
 
@@ -61,36 +108,103 @@ onMounted(() => {
 }
 
 .panel {
+    overflow: hidden;
     flex: 0 0 100vw;
     height: 100vh;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    padding: 12px;
+}
+
+.grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.cell {
+    border-radius: 14px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+}
+
+.center {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    color: white;
+    justify-content: center;
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
+    z-index: 2;
+
+    h2 {
+        margin: 0;
+        max-width: 100%;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        line-height: 1.05;
+        word-break: break-word;
+        text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    p {
+        margin: 10px 0 0;
+        max-width: 100%;
+        font-size: clamp(0.95rem, 1.8vw, 1.45rem);
+        font-weight: 600;
+        opacity: 0.98;
+        line-height: 1.45;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
 }
-.panel h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-.panel p {
-    font-size: 1.2rem;
-    opacity: 0.95;
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(7, minmax(0, 1fr));
+    }
+
+    .center {
+        grid-column: 1 / span 2;
+        grid-row: 4 / span 1;
+        border-radius: 14px;
+        padding: 0.8rem 0.65rem;
+
+        h2 {
+            font-size: clamp(1.6rem, 8.6vw, 2.6rem);
+            letter-spacing: 0.08em;
+        }
+
+        p {
+            margin-top: 6px;
+            font-size: clamp(0.8rem, 3.8vw, 1.15rem);
+            line-height: 1.35;
+        }
+    }
 }
 
 .p1 {
-    background: linear-gradient(135deg, #1a3a2e 0%, #2d5a4a 100%);
+    background: linear-gradient(135deg, #8bcf7a 0%, #4e9b58 100%);
 }
 .p2 {
-    background: linear-gradient(135deg, #3d2c5c 0%, #5a4a7a 100%);
+    background: linear-gradient(135deg, #2f6f8f 0%, #43b8a5 100%);
 }
 .p3 {
-    background: linear-gradient(135deg, #2c3d5c 0%, #4a5a7a 100%);
+    background: linear-gradient(135deg, #b66a2a 0%, #e3a544 100%);
 }
 .p4 {
-    background: linear-gradient(135deg, #4a3d2c 0%, #6a5a4a 100%);
+    background: linear-gradient(135deg, #7f8ea5 0%, #c7d2df 100%);
 }
 </style>
