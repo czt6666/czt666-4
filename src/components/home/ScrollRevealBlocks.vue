@@ -1,6 +1,6 @@
 <template>
     <div class="container-wrapper" id="frontend">
-        <div class="container" data-pswp-gallery="frontend-projects">
+        <div class="container">
             <div class="text">
                 <h2>前端<br />作品</h2>
                 <!-- <p class="sync-title">{{ activeDestination.title }}</p> -->
@@ -9,11 +9,7 @@
                 <div v-for="(item, index) in projectItems" :key="index" class="box project-card">
                     <div
                         class="project-cover"
-                        data-pswp-image
-                        :data-pswp-src="item.cover"
-                        data-pswp-width="1920"
-                        data-pswp-height="1080"
-                        :style="{ backgroundImage: `url(${item.cover})` }"
+                        v-lazy-image:bg="item.cover"
                     >
                         <span class="project-index">{{ `0${index + 1}` }}</span>
                     </div>
@@ -33,17 +29,12 @@
                     :key="dest.key"
                     class="box dest-block"
                     :data-index="index"
-                    :data-pswp-gallery="`destination-${dest.key}`"
                 >
                     <div class="dest-grid">
                         <div
                             v-for="n in 12"
+                            v-lazy-image:bg="getDestImageSrc(dest.key, n)"
                             :key="n"
-                            data-pswp-image
-                            :data-pswp-src="getDestImageSrc(dest.key, n)"
-                            data-pswp-width="1920"
-                            data-pswp-height="1280"
-                            :style="getDestImageStyle(dest.key, n)"
                         ></div>
                     </div>
                 </div>
@@ -156,15 +147,10 @@ onMounted(() => {
     });
 });
 
-function getDestImageStyle(destKey, imageIndex) {
-    return {
-        backgroundImage: `url(${getDestImageSrc(destKey, imageIndex)})`,
-    };
-}
-
 function getDestImageSrc(destKey, imageIndex) {
     return resolveStaticAssetUrl(`${destKey}/top/top-${imageIndex}.jpg`);
 }
+
 </script>
 
 <style lang="scss" scoped>

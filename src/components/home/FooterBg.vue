@@ -1,30 +1,27 @@
 <template>
     <footer class="footer-bg">
         <div class="footer-content">
-            <div class="footer-title-wrap">
-                <span
-                    v-for="(c, i) in chars"
-                    :key="i"
-                    class="footer-char"
-                    :class="{ dot: c === '.' }"
-                    :style="{ '--delay': (delays[i] ?? 0) + 'ms', '--i': i }"
+            <div class="footer-title" aria-label="CZT666.CN">
+                <svg
+                    class="footer-title-svg"
+                    viewBox="0 0 1200 240"
+                    role="img"
+                    aria-label="CZT666.CN"
+                    preserveAspectRatio="xMidYMid meet"
                 >
-                    {{ c }}
-                </span>
+                    <text class="footer-title-stroke" x="50%" y="52%">CZT666.CN</text>
+                    <text class="footer-title-fill" x="50%" y="52%">CZT666.CN</text>
+                </svg>
             </div>
-            <div class="footer-title-erosion" aria-hidden="true">CZT666.CN</div>
-            <div class="footer-glitch" aria-hidden="true">CZT666.CN</div>
-            <img src="https://picsum.photos/id/1063/1920/1080" alt="footer" />
+            <img v-lazy-image="footerImage" alt="footer" />
         </div>
     </footer>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
-const title = "CZT666.CN";
-const chars = ref(title.split(""));
-const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100));
+const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");
 </script>
 
 <style lang="scss" scoped>
@@ -65,154 +62,126 @@ const delays = ref(chars.value.map(() => Math.floor(Math.random() * 600) + 100))
     }
 }
 
-.footer-title-wrap {
+.footer-content::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5, 8, 16, 0.08) 0%,
+            rgba(5, 8, 16, 0.26) 60%,
+            rgba(5, 8, 16, 0.5) 100%
+        ),
+        radial-gradient(circle at 50% 50%, rgba(98, 206, 255, 0.14), transparent 54%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.footer-title {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(64px, 10vw, 108px);
+    width: 100%;
+    max-width: min(1200px, 92vw);
+    pointer-events: none;
+}
+
+.footer-title-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.footer-title-stroke,
+.footer-title-fill {
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 150px;
     font-weight: 800;
     letter-spacing: 0.08em;
-    color: #fff;
-    text-shadow:
-        0 0 40px rgba(255, 255, 255, 0.4),
-        0 0 80px rgba(255, 255, 255, 0.2),
-        0 2px 4px rgba(0, 0, 0, 0.5),
-        0 4px 12px rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-    animation: title-breathe 3s ease-in-out infinite;
+    font-family:
+        "Segoe UI",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
 }
 
-@keyframes title-breathe {
-    0%,
-    100% {
-        text-shadow:
-            0 0 40px rgba(255, 255, 255, 0.4),
-            0 0 80px rgba(255, 255, 255, 0.2),
-            0 2px 4px rgba(0, 0, 0, 0.5),
-            0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-    50% {
-        text-shadow:
-            0 0 56px rgba(255, 255, 255, 0.5),
-            0 0 100px rgba(255, 255, 255, 0.25),
-            0 2px 4px rgba(0, 0, 0, 0.5),
-            0 4px 12px rgba(0, 0, 0, 0.4);
-    }
+.footer-title-stroke {
+    fill: transparent;
+    stroke: rgba(232, 245, 255, 0.95);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    filter: drop-shadow(0 0 8px rgba(158, 226, 255, 0.35));
+    animation: stroke-reveal 6.4s ease-in-out infinite;
 }
 
-.footer-char {
+.footer-title-fill {
+    fill: rgba(245, 252, 255, 0.96);
     opacity: 0;
-    filter: blur(12px);
-    transform: scale(0.6) translateY(20px);
-    animation: char-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: var(--delay, 0ms);
+    filter:
+        drop-shadow(0 0 12px rgba(137, 214, 255, 0.42))
+        drop-shadow(0 2px 12px rgba(0, 0, 0, 0.35));
+    animation: fill-reveal 6.4s ease-in-out infinite;
 }
 
-.footer-char.dot {
-    margin: 0 0.05em;
-    animation-duration: 0.8s;
-}
-
-@keyframes char-reveal {
-    0% {
+@keyframes stroke-reveal {
+    0%,
+    8% {
+        stroke-dashoffset: 1800;
         opacity: 0;
-        filter: blur(12px);
-        transform: scale(0.6) translateY(20px);
     }
-    50% {
-        filter: blur(4px);
-    }
-    100% {
+    12% {
         opacity: 1;
-        filter: blur(0);
-        transform: scale(1) translateY(0);
     }
-}
-
-/* 侵蚀层：底层模糊 + 混合 */
-.footer-title-erosion {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    font-size: clamp(64px, 10vw, 108px);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: transparent;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.9) 0%,
-        rgba(255, 255, 255, 0.5) 40%,
-        rgba(255, 255, 255, 0.2) 70%,
-        rgba(255, 255, 255, 0.05) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: blur(2px);
-    opacity: 0.6;
-    animation: erosion-pulse 4s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes erosion-pulse {
-    0%,
+    56% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    84% {
+        stroke-dashoffset: 0;
+        opacity: 0.45;
+    }
     100% {
-        opacity: 0.5;
-        filter: blur(2px);
-    }
-    50% {
-        opacity: 0.75;
-        filter: blur(3px);
+        stroke-dashoffset: -220;
+        opacity: 0;
     }
 }
 
-/* 故障/闪烁层 */
-.footer-glitch {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    font-size: clamp(64px, 10vw, 108px);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: transparent;
-    background: linear-gradient(90deg, #0ff, #f0f, #ff0);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    opacity: 0;
-    animation: glitch 6s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes glitch {
+@keyframes fill-reveal {
     0%,
-    92%,
+    52% {
+        opacity: 0;
+    }
+    66% {
+        opacity: 0.92;
+    }
+    82% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 0.6;
+    }
     100% {
         opacity: 0;
-        transform: translate(-50%, -50%);
     }
-    93% {
-        opacity: 0.15;
-        transform: translate(calc(-50% - 4px), -50%) skewX(-2deg);
+}
+
+@include mobile {
+    .footer-title {
+        max-width: min(980px, 94vw);
     }
-    94% {
-        opacity: 0;
-        transform: translate(calc(-50% + 3px), -50%) skewX(1deg);
-    }
-    95% {
-        opacity: 0.2;
-        transform: translate(-50%, -50%);
-    }
-    96% {
-        opacity: 0;
+
+    .footer-title-stroke,
+    .footer-title-fill {
+        font-size: 138px;
+        letter-spacing: 0.06em;
     }
 }
 </style>

@@ -13,7 +13,7 @@
                 :key="index"
                 class="photo-layer"
                 :data-index="index"
-                :style="getLayerStyle(photo)"
+                v-lazy-image:bg="resolveStaticAssetUrl(photo)"
             ></div>
         </div>
     </div>
@@ -42,10 +42,6 @@ const photos = computed(() => (isMobile.value ? photosMobile : photosPC));
 
 const segmentPx = computed(() => (isMobile.value ? 360 : 500));
 const wrapperRef = ref(null);
-
-function getLayerStyle(photo) {
-    return { backgroundImage: `url(${resolveStaticAssetUrl(photo)})` };
-}
 
 onMounted(() => {
     const wrapper = wrapperRef.value;

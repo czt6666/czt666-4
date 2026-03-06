@@ -8,10 +8,10 @@
                 </div>
                 <div class="box2-grid">
                     <div
-                        v-for="img in item.images"
+                        v-for="(img, imageIndex) in item.images"
                         :key="`${item.key}-${img}`"
                         class="box2-cell"
-                        :style="getArtImageStyle(item.folder, img)"
+                        v-lazy-image:bg="getArtImageSrc(item.folder, img)"
                     ></div>
                 </div>
             </div>
@@ -19,12 +19,21 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { onMounted } from "vue";
 import gsap from "gsap";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
-const artSections = [
+interface ArtSection {
+    key: string;
+    className: string;
+    folder: string;
+    title: string;
+    desc: string;
+    images: number[];
+}
+
+const artSections: ArtSection[] = [
     {
         key: "building",
         className: "b1",
@@ -45,8 +54,8 @@ const artSections = [
         key: "fly",
         className: "b3",
         folder: "2fly",
-        title: "飞行",
-        desc: "航线、机翼与窗景，旅途在云层之间展开。",
+        title: "航拍",
+        desc: "记录地表纹理、城市脉络与风景的宏大肌理。",
         images: Array.from({ length: 12 }, (_, i) => i + 1),
     },
     {
@@ -93,10 +102,8 @@ onMounted(() => {
     });
 });
 
-function getArtImageStyle(folder, imageIndex) {
-    return {
-        backgroundImage: `url(${resolveStaticAssetUrl(`6art/${folder}/top/top-${imageIndex}.jpg`)})`,
-    };
+function getArtImageSrc(folder: string, imageIndex: number): string {
+    return resolveStaticAssetUrl(`6art/${folder}/top/top-${imageIndex}.jpg`);
 }
 </script>
 

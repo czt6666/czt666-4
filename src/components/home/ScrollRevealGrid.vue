@@ -2,14 +2,24 @@
     <div class="photo-grid">
         <div class="grid-title">旅行与日常 · 瞬间</div>
         <div class="grid" id="photoGrid">
-            <img v-for="i in 72" :key="i" :src="`https://picsum.photos/400/400?random=${i}`" />
+            <img
+                v-for="(url, index) in photoUrls"
+                :key="url"
+                v-lazy-image="url"
+                :alt="`瞬间-${index + 1}`"
+            />
         </div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { onMounted } from "vue";
 import gsap from "gsap";
+import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
+
+const photoUrls = Array.from({ length: 72 }, (_, index) => {
+    return resolveStaticAssetUrl(`7grid/grid-${index + 1}.jpg`);
+});
 
 onMounted(() => {
     const imgs = document.querySelectorAll("#photoGrid img");

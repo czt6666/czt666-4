@@ -3,10 +3,10 @@
         <div v-for="panel in seasonPanels" :key="panel.key" class="panel" :class="panel.className">
             <div class="grid">
                 <div
-                    v-for="image in panel.images"
+                    v-for="(image, imageIndex) in panel.images"
                     :key="`${panel.key}-${image.position}`"
                     class="cell"
-                    :style="{ backgroundImage: `url(${image.src})` }"
+                    v-lazy-image:bg="image.src"
                 ></div>
 
                 <div class="center">

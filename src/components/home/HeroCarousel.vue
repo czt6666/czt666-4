@@ -6,7 +6,7 @@
                 :key="index"
                 class="slide"
                 :class="{ active: index === currentIndex }"
-                :style="getSlideStyle(slide)"
+                v-lazy-image:bg="resolveStaticAssetUrl(slide.src)"
             >
                 <div class="slide-overlay" />
             </div>
@@ -67,13 +67,6 @@ const slides = computed(() => (isMobile.value ? slidesMobile : slidesPC));
 const currentIndex = ref(0);
 let autoplayTimer = null;
 const autoplayDelay = 5000;
-
-const imageSize = computed(() => (isMobile.value ? "768/1024" : "1920/1080"));
-
-function getSlideStyle(slide) {
-    const src = resolveStaticAssetUrl(slide.src);
-    return { backgroundImage: `url(${src})` };
-}
 
 function goTo(index) {
     currentIndex.value = index;
