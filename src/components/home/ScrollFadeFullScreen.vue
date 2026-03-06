@@ -23,25 +23,28 @@
 import { ref, computed, inject, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-
-// PC 端照片列表（picsum id，大图 1920×1080）
-const photosPC = [1069, 1071, 1073, 1075, 1077, 1079, 1081, 1083];
-// 移动端照片列表（可换 id 或数量，小图 768×1024）
-const photosMobile = [1069, 1071, 1073, 1075, 1077, 1079, 1081, 1083];
+import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 const isMobile = inject("isMobile");
+const photosPC = [
+    "0top/index-11.jpg",
+    "0top/index-12.jpg",
+    "0top/index-13.jpg",
+    "0top/index-14.jpg",
+];
+const photosMobile = [
+    "0top/index-11.jpg",
+    "0top/index-12m.jpg",
+    "0top/index-13m.jpg",
+    "0top/index-14m.jpg",
+];
 const photos = computed(() => (isMobile.value ? photosMobile : photosPC));
 
-const segmentPxMobile = 320;
-const segmentPx = computed(() => (isMobile.value ? segmentPxMobile : 500));
+const segmentPx = computed(() => (isMobile.value ? 360 : 500));
 const wrapperRef = ref(null);
 
-const imageSize = computed(() => (isMobile.value ? "768/1024" : "1920/1080"));
-
 function getLayerStyle(photo) {
-    const url =
-        typeof photo === "number" ? `https://picsum.photos/id/${photo}/${imageSize.value}` : photo;
-    return { backgroundImage: `url(${url})` };
+    return { backgroundImage: `url(${resolveStaticAssetUrl(photo)})` };
 }
 
 onMounted(() => {
@@ -64,7 +67,7 @@ onMounted(() => {
     ScrollTrigger.create({
         trigger: wrapper,
         start: "top top",
-        end: "bottom top",
+        end: "bottom bottom",
         scrub: true,
         animation: tl,
     });

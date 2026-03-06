@@ -31,7 +31,7 @@ export default async function () {
     const port = await getPort();
 
     return defineConfig({
-        base: "/",
+        base: "/v4",
         plugins: [
             vue(),
             vueDevTools(),

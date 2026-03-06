@@ -1,13 +1,20 @@
 <template>
     <div class="container-wrapper" id="frontend">
-        <div class="container">
+        <div class="container" data-pswp-gallery="frontend-projects">
             <div class="text">
                 <h2>前端<br />作品</h2>
                 <!-- <p class="sync-title">{{ activeDestination.title }}</p> -->
             </div>
             <div class="boxes project-cards">
                 <div v-for="(item, index) in projectItems" :key="index" class="box project-card">
-                    <div class="project-cover" :style="{ background: item.cover }">
+                    <div
+                        class="project-cover"
+                        data-pswp-image
+                        :data-pswp-src="item.cover"
+                        data-pswp-width="1920"
+                        data-pswp-height="1080"
+                        :style="{ backgroundImage: `url(${item.cover})` }"
+                    >
                         <span class="project-index">{{ `0${index + 1}` }}</span>
                     </div>
                     <div class="project-content">
@@ -26,14 +33,17 @@
                     :key="dest.key"
                     class="box dest-block"
                     :data-index="index"
+                    :data-pswp-gallery="`destination-${dest.key}`"
                 >
                     <div class="dest-grid">
                         <div
                             v-for="n in 12"
-                            :style="{
-                                backgroundImage: `url(src/assets/static/${dest.key}/top/top-${n}.jpg)`,
-                            }"
                             :key="n"
+                            data-pswp-image
+                            :data-pswp-src="getDestImageSrc(dest.key, n)"
+                            data-pswp-width="1920"
+                            data-pswp-height="1280"
+                            :style="getDestImageStyle(dest.key, n)"
                         ></div>
                     </div>
                 </div>
@@ -47,35 +57,41 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, inject } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projectItems = [
-    {
-        title: "国内ChatGPT",
-        desc: "AI 对话与工具集合，统一入口与清晰信息层级。",
-        href: "https://czt666.cn/gpt",
-        cta: "查看项目",
-        cover: "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    },
-    {
-        title: "地图相册",
-        desc: "按地理位置整理旅途内容，卡片与地图联动浏览。",
-        href: "https://czt666.cn/map",
-        cta: "查看项目",
-        cover: "linear-gradient(135deg, #1f4037 0%, #99f2c8 100%)",
-    },
-    {
-        title: "留言墙",
-        desc: "轻互动留言体验，支持内容沉淀与情绪化表达。",
-        href: "https://czt666.cn/lyq",
-        cta: "查看项目",
-        cover: "linear-gradient(135deg, #42275a 0%, #734b6d 100%)",
-    },
-];
+const isMobile = inject("isMobile");
+
+const projectItems = computed(() => {
+    const suffix = isMobile?.value ? "-m" : "";
+    return [
+        {
+            title: "国内ChatGPT",
+            desc: "AI 对话与工具集合，统一入口与清晰信息层级。",
+            href: "https://czt666.cn/gpt",
+            cta: "查看项目",
+            cover: resolveStaticAssetUrl(`00frontend/gpt${suffix}.jpg`),
+        },
+        {
+            title: "地图相册",
+            desc: "按地理位置整理旅途内容，卡片与地图联动浏览。",
+            href: "https://czt666.cn/map",
+            cta: "查看项目",
+            cover: resolveStaticAssetUrl(`00frontend/map${suffix}.jpg`),
+        },
+        {
+            title: "留言墙",
+            desc: "轻互动留言体验，支持内容沉淀与情绪化表达。",
+            href: "https://czt666.cn/lyq",
+            cta: "查看项目",
+            cover: resolveStaticAssetUrl(`00frontend/lyq${suffix}.jpg`),
+        },
+    ];
+});
 
 const destinations = ref([
     {
@@ -139,6 +155,16 @@ onMounted(() => {
         });
     });
 });
+
+function getDestImageStyle(destKey, imageIndex) {
+    return {
+        backgroundImage: `url(${getDestImageSrc(destKey, imageIndex)})`,
+    };
+}
+
+function getDestImageSrc(destKey, imageIndex) {
+    return resolveStaticAssetUrl(`${destKey}/top/top-${imageIndex}.jpg`);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -223,6 +249,9 @@ onMounted(() => {
     border-radius: 14px;
     position: relative;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .project-index {

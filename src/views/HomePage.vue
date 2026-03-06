@@ -25,7 +25,7 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import Header from "@/components/Header.vue";
 import HeroCarousel from "@/components/home/HeroCarousel.vue";
 import ScrollRevealBlocks from "@/components/home/ScrollRevealBlocks.vue";

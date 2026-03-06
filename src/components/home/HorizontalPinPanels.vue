@@ -21,9 +21,10 @@
 <script setup>
 import { onMounted, inject, computed } from "vue";
 import gsap from "gsap";
+import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 const isMobile = inject("isMobile");
-const seasonBasePath = "src/assets/static/5beijing";
+const seasonBasePath = "5beijing";
 
 const basePanels = [
     {
@@ -61,7 +62,9 @@ const seasonPanels = computed(() => {
             const imageIndex = idx + 1;
             return {
                 position: imageIndex,
-                src: `${seasonBasePath}/${panel.folder}/top/top-${imageIndex}.jpg`,
+                src: resolveStaticAssetUrl(
+                    `${seasonBasePath}/${panel.folder}/top/top-${imageIndex}.jpg`,
+                ),
             };
         });
 
