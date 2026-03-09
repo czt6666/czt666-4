@@ -50,30 +50,30 @@
 import { ref, computed, inject, onMounted, onBeforeUnmount, watch } from "vue";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
-// PC 端轮播项（大图 1920×1080）
+// PC 端轮播项
 const slidesPC = [
-    { src: "0top/index-1.jpg", title: "晨曦", shootDate: "2024.03.15" },
-    { src: "0top/index-2.jpg", title: "繁星", shootDate: "2024.04.02" },
-    { src: "0top/index-3.jpg", title: "星轨", shootDate: "2024.04.18" },
-    { src: "0top/index-4.jpg", title: "荷花", shootDate: "2024.05.06" },
-    { src: "0top/index-5.jpg", title: "盐湖", shootDate: "2024.05.22" },
-    { src: "0top/index-6.jpg", title: "森林", shootDate: "2024.06.10" },
-    { src: "0top/index-7.jpg", title: "飞机", shootDate: "2024.06.28" },
-    { src: "0top/index-8.jpg", title: "雪山", shootDate: "2024.07.14" },
-    { src: "0top/index-9.jpg", title: "大桥", shootDate: "2024.08.01" },
-    { src: "0top/index-10.jpg", title: "日出", shootDate: "2024.08.19" },
+    { src: "0top/index-1.jpg", title: "晨曦", shootDate: "2026.02.25" },
+    { src: "0top/index-2.jpg", title: "繁星", shootDate: "2025.08.23" },
+    { src: "0top/index-3.jpg", title: "星轨", shootDate: "2021.08.02" },
+    { src: "0top/index-4.jpg", title: "荷花", shootDate: "2018.08.14" },
+    { src: "0top/index-5.jpg", title: "盐湖", shootDate: "2022.07.23" },
+    { src: "0top/index-6.jpg", title: "森林", shootDate: "2022.07.30" },
+    { src: "0top/index-7.jpg", title: "飞机", shootDate: "2019.08.13" },
+    { src: "0top/index-8.jpg", title: "雪山", shootDate: "2022.08.14" },
+    { src: "0top/index-9.jpg", title: "大桥", shootDate: "2022.07.13" },
+    { src: "0top/index-10.jpg", title: "日出", shootDate: "2026.02.25" },
 ];
-// 移动端轮播项（可换 id 或尺寸，这里用竖版 768×1024）
+// 移动端轮播项
 const slidesMobile = [
-    { src: "0top/index-1.jpg", title: "晨曦", shootDate: "2024.03.15" },
-    { src: "0top/index-2.jpg", title: "繁星", shootDate: "2024.04.02" },
-    { src: "0top/index-3m.jpg", title: "星轨", shootDate: "2024.04.18" },
-    { src: "0top/index-4m.jpg", title: "荷花", shootDate: "2024.05.06" },
-    { src: "0top/index-5m.jpg", title: "桃花", shootDate: "2024.05.22" },
-    { src: "0top/index-6m.jpg", title: "森林", shootDate: "2024.06.10" },
-    { src: "0top/index-7m.jpg", title: "飞机", shootDate: "2024.06.28" },
-    { src: "0top/index-8m.jpg", title: "建筑", shootDate: "2024.07.14" },
-    { src: "0top/index-9m.jpg", title: "香港", shootDate: "2024.08.01" },
+    { src: "0top/index-1.jpg", title: "晨曦", shootDate: "2026.02.25" },
+    { src: "0top/index-2.jpg", title: "繁星", shootDate: "2025.08.23" },
+    { src: "0top/index-3m.jpg", title: "星轨", shootDate: "2021.08.02" },
+    { src: "0top/index-4m.jpg", title: "荷花", shootDate: "2018.08.14" },
+    { src: "0top/index-5m.jpg", title: "桃花", shootDate: "2021.03.16" },
+    { src: "0top/index-6m.jpg", title: "森林", shootDate: "2022.07.30" },
+    { src: "0top/index-7m.jpg", title: "飞机", shootDate: "2025.09.19" },
+    { src: "0top/index-8m.jpg", title: "建筑", shootDate: "2022.01.16" },
+    { src: "0top/index-9m.jpg", title: "香港", shootDate: "2024.05.25" },
     { src: "0top/index-10m.jpg", title: "水杉", shootDate: "2024.08.19" },
 ];
 

@@ -81,7 +81,7 @@ onMounted(() => {
     const sections = gsap.utils.toArray(".panel");
     const segmentCount = sections.length - 1;
     const step = 1 / segmentCount;
-    const snapThreshold = step * 0.12; // 低阈值：仅非常接近时才轻微吸附
+    const snapThreshold = step * (isMobile.value ? 0.12 : 0.06); // PC 阈值减半
     // 拉长滚动距离，降低灵敏度，整体仍保持连续滚动
     const getEnd = () => {
         const w = trigger.getBoundingClientRect().width - 1;
