@@ -9,51 +9,39 @@
             </section>
 
             <WaterfallHorizontal
-                :images="images"
+                :images="visibleImages"
                 :line-height="lineHeight"
                 :line-width="lineWidth"
                 :margin="margin"
             >
                 <template #item="{ info }">
                     <div class="wall-item" @click="openLightbox(info.src)">
-                        <img
-                            :src="info.src"
-                            :alt="info.title || '照片'"
-                            loading="lazy"
-                            decoding="async"
-                        />
+                        <img v-lazy-image="info.src" :alt="info.title || '照片'" decoding="async" />
+                        <div class="wall-item-title">{{ info.title }}</div>
                     </div>
                 </template>
             </WaterfallHorizontal>
+
+            <div ref="loadMoreRef" class="photo-wall-load-more" aria-hidden="true"></div>
         </main>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import AppHeader from "@/components/AppHeader.vue";
-import WaterfallHorizontal, { type WaterfallImage } from "@/components/WaterfallHorizontal.vue";
-import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
+import WaterfallHorizontal from "@/components/WaterfallHorizontal.vue";
+import { photoWallImages } from "@/data/photoWallImages";
 import { openImagePreview } from "@/composables/useImagePreview";
 
-const DEFAULT_WIDTH = 400;
-const DEFAULT_HEIGHT = 300;
+// 所有图片数据（可手动维护或来自接口）
+const allImages = photoWallImages;
 
-// static/9zpq 下全部照片：init1000.jpg ~ init1149.jpg
-const ZPQ_START = 1000;
-const ZPQ_END = 1149;
-
-const images = computed<WaterfallImage[]>(() =>
-    Array.from({ length: ZPQ_END - ZPQ_START + 1 }, (_, i) => {
-        const n = ZPQ_START + i;
-        return {
-            src: resolveStaticAssetUrl(`9zpq/init${n}.jpg`),
-            width: DEFAULT_WIDTH,
-            height: DEFAULT_HEIGHT,
-            title: `照片 ${i + 1}`,
-        };
-    }),
-);
+// 手写懒加载：一次只把部分图片传给瀑布流组件
+const PAGE_SIZE = 40;
+const visibleImages = ref(allImages.slice(0, PAGE_SIZE));
+const loadMoreRef = ref<HTMLElement | null>(null);
+let io: IntersectionObserver | null = null;
 
 const lineHeight = ref(320);
 const lineWidth = ref(1080);
@@ -62,22 +50,63 @@ const margin = ref(10);
 function updateLayout() {
     const w = document.documentElement.clientWidth;
     lineHeight.value = Math.min(350, w * 0.35);
-    lineWidth.value = w > 720 ? w - 120 : w;
+
+    // 根据与页面 padding 对齐，避免在移动端横向超出
+    const horizontalPadding = w > 720 ? 48 : 32; // desktop: 24 * 2, mobile: 16 * 2
+    lineWidth.value = Math.max(0, w - horizontalPadding);
+
     margin.value = w > 720 ? 10 : 5;
 }
 
 function openLightbox(src: string) {
-    const index = images.value.findIndex((img) => img.src === src);
-    openImagePreview(images.value, { startIndex: index >= 0 ? index : 0 });
+    // 预览时使用完整列表，方便左右切图
+    const index = allImages.findIndex((img) => img.src === src);
+    openImagePreview(visibleImages.value, { startIndex: index >= 0 ? index : 0 });
+}
+
+function loadMoreImages() {
+    const current = visibleImages.value.length;
+    if (current >= allImages.length) {
+        if (io && loadMoreRef.value) {
+            io.unobserve(loadMoreRef.value);
+        }
+        return;
+    }
+    const next = current + PAGE_SIZE;
+    visibleImages.value = allImages.slice(0, Math.min(next, allImages.length));
 }
 
 onMounted(() => {
     updateLayout();
     window.addEventListener("resize", updateLayout);
+
+    // 使用 IntersectionObserver 监听底部哨兵，进入视口时按页追加图片
+    if ("IntersectionObserver" in window) {
+        io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        loadMoreImages();
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: "800px 0px",
+                threshold: 0.01,
+            },
+        );
+        if (loadMoreRef.value) {
+            io.observe(loadMoreRef.value);
+        }
+    }
 });
 
 onBeforeUnmount(() => {
     window.removeEventListener("resize", updateLayout);
+    if (io && loadMoreRef.value) {
+        io.unobserve(loadMoreRef.value);
+    }
 });
 </script>
 
@@ -91,6 +120,7 @@ onBeforeUnmount(() => {
         radial-gradient(circle at 20% 15%, rgba(25, 45, 80, 0.35), transparent 45%),
         radial-gradient(circle at 85% 85%, rgba(35, 55, 90, 0.2), transparent 40%),
         linear-gradient(165deg, #0a0d14 0%, #0e121a 50%, #080b10 100%);
+    overflow-x: hidden;
 }
 
 .photo-wall-main {
@@ -121,23 +151,49 @@ onBeforeUnmount(() => {
 }
 
 .wall-item {
+    position: relative;
     width: 100%;
     height: 100%;
-    cursor: pointer;
     overflow: hidden;
-    border-radius: 8px;
     background: rgba(0, 0, 0, 0.3);
+    cursor: zoom-in;
 
     img {
         display: block;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        /* 懒加载：无 src 时仅显示占位背景，进入视口后由 v-lazy-image 设置 src */
+        opacity: 0;
+        transition: opacity 0.25s ease;
     }
 
-    &:hover img {
-        transform: scale(1.04);
+    img[src] {
+        opacity: 1;
     }
+}
+
+.wall-item-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+}
+
+.wall-item:hover .wall-item-title {
+    transform: translateY(0);
+}
+
+.photo-wall-load-more {
+    height: 1px;
+    width: 100%;
 }
 </style>

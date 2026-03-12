@@ -20,7 +20,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 const photoIds = ref([1021, 1025, 1035, 1043, 1045]);
-const wrapperRef = ref(null);
+const wrapperRef = ref<HTMLElement | null>(null);
 
 onMounted(() => {
     const wrapper = wrapperRef.value;

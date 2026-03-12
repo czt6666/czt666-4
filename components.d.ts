@@ -14,7 +14,6 @@ declare module 'vue' {
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     Content: typeof import('./src/components/Content.vue')['default']
     FooterBg: typeof import('./src/components/home/FooterBg.vue')['default']
-    Header: typeof import('./src/components/Header.vue')['default']
     HeroCarousel: typeof import('./src/components/home/HeroCarousel.vue')['default']
     HorizontalPinPanels: typeof import('./src/components/home/HorizontalPinPanels.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

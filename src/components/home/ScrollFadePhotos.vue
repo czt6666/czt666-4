@@ -17,7 +17,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 onMounted(() => {
-    gsap.utils.toArray(".photo").forEach((p) => {
+    gsap.utils.toArray<HTMLElement>(".photo").forEach((p) => {
         gsap.to(p, {
             opacity: 1,
             scrollTrigger: {

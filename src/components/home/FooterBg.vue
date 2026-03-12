@@ -103,7 +103,9 @@ const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");
     font-size: 150px;
     font-weight: 800;
     letter-spacing: 0.08em;
-    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-family:
+        "SF Pro Rounded", "Segoe UI", "Ubuntu", "Helvetica Neue", "PingFang SC", "Microsoft YaHei",
+        sans-serif;
 }
 
 .footer-title-stroke {

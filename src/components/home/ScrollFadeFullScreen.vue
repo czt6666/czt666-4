@@ -20,12 +20,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { Ref } from "vue";
 import { ref, computed, inject, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
-const isMobile = inject("isMobile");
+const isMobile = inject<Ref<boolean>>("isMobile");
 const photosPC = [
     "0top/index-11.jpg",
     "0top/index-12.jpg",
@@ -38,10 +39,10 @@ const photosMobile = [
     "0top/index-13m.jpg",
     "0top/index-14m.jpg",
 ];
-const photos = computed(() => (isMobile.value ? photosMobile : photosPC));
+const photos = computed(() => (isMobile?.value ? photosMobile : photosPC));
 
-const segmentPx = computed(() => (isMobile.value ? 360 : 500));
-const wrapperRef = ref(null);
+const segmentPx = computed(() => (isMobile?.value ? 360 : 500));
+const wrapperRef = ref<HTMLElement | null>(null);
 
 onMounted(() => {
     const wrapper = wrapperRef.value;

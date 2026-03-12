@@ -52,7 +52,7 @@ import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const isMobile = inject("isMobile");
+const isMobile = inject<Ref<boolean>>("isMobile");
 
 const projectItems = computed(() => {
     const suffix = isMobile?.value ? "-m" : "";
@@ -142,7 +142,7 @@ onMounted(() => {
     });
 });
 
-function getDestImageSrc(destKey, imageIndex) {
+function getDestImageSrc(destKey: string, imageIndex: number) {
     return resolveStaticAssetUrl(`${destKey}/top/top-${imageIndex}.jpg`);
 }
 </script>

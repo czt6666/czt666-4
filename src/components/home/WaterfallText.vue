@@ -14,7 +14,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 const lines = ref(["你好", "欢迎来到", "灵感的瀑布", "每一行都流动", "随着滚动逐渐坠落"]);
 
 onMounted(() => {
-    gsap.utils.toArray(".line").forEach((line) => {
+    gsap.utils.toArray<HTMLElement>(".line").forEach((line) => {
         gsap.to(line, {
             opacity: 1,
             y: 0,

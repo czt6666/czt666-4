@@ -84,7 +84,7 @@ const slides = computed(() => (isMobile?.value ? slidesMobile : slidesPC));
 
 const currentIndex = ref(0);
 const isNavCollapsed = ref(false);
-let autoplayTimer = null;
+let autoplayTimer: any = null;
 const autoplayDelay = 5000;
 
 watch(
@@ -95,7 +95,7 @@ watch(
     { immediate: true },
 );
 
-function goTo(index) {
+function goTo(index: number) {
     currentIndex.value = index;
     resetAutoplay();
 }

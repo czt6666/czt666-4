@@ -1,10 +1,6 @@
 <template>
     <div class="waterfall-cont" :style="{ width: lineWidth + 'px' }">
-        <div
-            v-for="(row, rowIndex) in rows"
-            :key="rowIndex"
-            class="waterfall-row"
-        >
+        <div v-for="(row, rowIndex) in rows" :key="rowIndex" class="waterfall-row">
             <div
                 v-for="(item, colIndex) in row"
                 :key="colIndex"
@@ -18,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 export interface WaterfallImage {
     src: string;
@@ -34,7 +30,7 @@ export interface WaterfallBoxItem extends WaterfallImage {
 
 const props = withDefaults(
     defineProps<{
-        images: WaterfallImage[];
+        images: Array<{ src: string; width?: number; height?: number; title?: string }>;
         lineHeight?: number;
         lineWidth?: number;
         margin?: number;
@@ -43,14 +39,61 @@ const props = withDefaults(
         lineHeight: 300,
         lineWidth: 1080,
         margin: 10,
-    }
+    },
+);
+
+/** 单张图片加载后读取真实宽高 */
+function loadImageDimensions(src: string): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+/** 确保所有图片已加载再返回带真实宽高的列表，供 filledImages 使用 */
+async function loadImagesWithDimensions(
+    list: Array<{ src: string; width?: number; height?: number; title?: string }>,
+): Promise<WaterfallImage[]> {
+    const result = await Promise.all(
+        list.map(async (item) => {
+            const { width, height } = await loadImageDimensions(item.src);
+            return {
+                src: item.src,
+                width,
+                height,
+                title: item.title,
+            };
+        }),
+    );
+    return result;
+}
+
+const imagesWithDimensions = ref<WaterfallImage[]>([]);
+
+watch(
+    () => props.images,
+    async (newImages) => {
+        if (!newImages?.length) {
+            imagesWithDimensions.value = [];
+            return;
+        }
+        try {
+            imagesWithDimensions.value = await loadImagesWithDimensions(newImages);
+        } catch (e) {
+            console.error("WaterfallHorizontal: load images failed", e);
+            imagesWithDimensions.value = [];
+        }
+    },
+    { immediate: true },
 );
 
 function filledImages(
     images: WaterfallImage[],
     rowHeight: number,
     containerWidth: number,
-    gap: number
+    gap: number,
 ): WaterfallBoxItem[][] {
     const rows: WaterfallBoxItem[][] = [];
     let i = 0;
@@ -94,7 +137,7 @@ function filledImages(
 }
 
 const rows = computed(() =>
-    filledImages(props.images, props.lineHeight, props.lineWidth, props.margin)
+    filledImages(imagesWithDimensions.value, props.lineHeight, props.lineWidth, props.margin),
 );
 
 function boxStyle(item: WaterfallBoxItem) {

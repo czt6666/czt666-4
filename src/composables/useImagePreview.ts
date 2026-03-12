@@ -10,6 +10,44 @@ export interface PreviewImageItem {
 
 let activePhotoSwipe: PhotoSwipe | null = null;
 
+function loadImageDimensions(src: string): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => reject(new Error(`Failed to load: ${src}`));
+        img.src = src;
+    });
+}
+
+async function resolveImageSizes(
+    images: PreviewImageItem[],
+): Promise<Array<{ src: string; width: number; height: number; alt?: string; title?: string }>> {
+    const hasSize = (item: PreviewImageItem) =>
+        item.width != null && item.height != null && item.width > 0 && item.height > 0;
+
+    return Promise.all(
+        images.map(async (item) => {
+            if (hasSize(item)) {
+                return {
+                    src: item.src,
+                    width: item.width!,
+                    height: item.height!,
+                    alt: item.alt,
+                    title: item.title,
+                };
+            }
+            const { width, height } = await loadImageDimensions(item.src);
+            return {
+                src: item.src,
+                width,
+                height,
+                alt: item.alt,
+                title: item.title,
+            };
+        }),
+    );
+}
+
 function normalizeImages(
     payload: string | string[] | PreviewImageItem | PreviewImageItem[],
 ): PreviewImageItem[] {
@@ -31,10 +69,10 @@ function normalizeImages(
     return payload.src ? [payload] : [];
 }
 
-export function openImagePreview(
+export async function openImagePreview(
     payload: string | string[] | PreviewImageItem | PreviewImageItem[],
     options?: { startIndex?: number },
-): void {
+): Promise<void> {
     const images = normalizeImages(payload);
     if (!images.length) {
         return;
@@ -45,10 +83,11 @@ export function openImagePreview(
         activePhotoSwipe = null;
     }
 
-    const dataSource = images.map((item) => ({
+    const withSizes = await resolveImageSizes(images);
+    const dataSource = withSizes.map((item) => ({
         src: item.src,
-        width: item.width ?? 1600,
-        height: item.height ?? 900,
+        width: item.width,
+        height: item.height,
         alt: item.alt ?? "",
         title: item.title,
     }));
@@ -68,6 +107,10 @@ export function openImagePreview(
         pinchToClose: true,
         closeOnVerticalDrag: true,
         spacing: 0.08,
+        // 放大方式：滚轮放大缩小；双击图片放大/还原；最大放大倍数提高以便继续放大
+        initialZoomLevel: "fit",
+        secondaryZoomLevel: 2.5,
+        maxZoomLevel: 6,
     });
 
     pswp.on("destroy", () => {
