@@ -8,7 +8,7 @@
                 :class="{ active: index === currentIndex }"
                 v-lazy-image:bg="resolveStaticAssetUrl(slide.src)"
             >
-                <div class="slide-overlay" />
+                <div class="slide-overlay"></div>
             </div>
         </div>
 
@@ -38,15 +38,16 @@
                 @click="toggleMobileNav"
             >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M5 6 L11 12 L5 18" />
-                    <path d="M13 6 L19 12 L13 18" />
+                    <path d="M5 6 L11 12 L5 18"></path>
+                    <path d="M13 6 L19 12 L13 18"></path>
                 </svg>
             </button>
         </div>
     </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import type { Ref } from "vue";
 import { ref, computed, inject, onMounted, onBeforeUnmount, watch } from "vue";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
@@ -60,7 +61,7 @@ const slidesPC = [
     { src: "0top/index-6.jpg", title: "森林", shootDate: "2022.07.30" },
     { src: "0top/index-7.jpg", title: "飞机", shootDate: "2019.08.13" },
     { src: "0top/index-8.jpg", title: "雪山", shootDate: "2022.08.14" },
-    { src: "0top/index-9.jpg", title: "大桥", shootDate: "2022.07.13" },
+    { src: "0top/index-9.jpg", title: "桥梁", shootDate: "2022.07.13" },
     { src: "0top/index-10.jpg", title: "日出", shootDate: "2026.02.25" },
 ];
 // 移动端轮播项
@@ -77,9 +78,9 @@ const slidesMobile = [
     { src: "0top/index-10m.jpg", title: "水杉", shootDate: "2024.08.19" },
 ];
 
-const isMobile = inject("isMobile");
+const isMobile = inject<Ref<boolean>>("isMobile");
 const isMobileView = computed(() => Boolean(isMobile?.value));
-const slides = computed(() => (isMobile.value ? slidesMobile : slidesPC));
+const slides = computed(() => (isMobile?.value ? slidesMobile : slidesPC));
 
 const currentIndex = ref(0);
 const isNavCollapsed = ref(false);

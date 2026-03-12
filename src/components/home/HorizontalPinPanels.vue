@@ -18,7 +18,7 @@
     </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { onMounted, inject, computed } from "vue";
 import gsap from "gsap";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";

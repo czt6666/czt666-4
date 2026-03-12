@@ -18,7 +18,7 @@
     </footer>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
 const footerImage = resolveStaticAssetUrl("8footer/footer.jpg");

@@ -1,8 +1,6 @@
 <template>
     <div>
-        <section class="intro-section">
-            向下滚动，探索更多 👇
-        </section>
+        <section class="intro-section">向下滚动，探索更多 👇</section>
 
         <div class="sticky-wrapper">
             <div class="sticky-card">
@@ -11,16 +9,13 @@
             </div>
         </div>
 
-        <section class="outro-section">
-            继续向下，看摄影与旅途 👇
-        </section>
+        <section class="outro-section">继续向下，看摄影与旅途 👇</section>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { onMounted } from "vue";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 
 onMounted(() => {
     gsap.to(".sticky-wrapper", {

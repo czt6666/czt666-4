@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     Content: typeof import('./src/components/Content.vue')['default']
     FooterBg: typeof import('./src/components/home/FooterBg.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
@@ -26,6 +27,7 @@ declare module 'vue' {
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SlideInSections: typeof import('./src/components/home/SlideInSections.vue')['default']
     StickyFixText: typeof import('./src/components/home/StickyFixText.vue')['default']
+    WaterfallHorizontal: typeof import('./src/components/WaterfallHorizontal.vue')['default']
     WaterfallText: typeof import('./src/components/home/WaterfallText.vue')['default']
   }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="home-page">
-        <Header />
+        <AppHeader />
 
         <!-- 全屏轮播 -->
         <HeroCarousel />
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import Header from "@/components/Header.vue";
+import AppHeader from "@/components/AppHeader.vue";
 import HeroCarousel from "@/components/home/HeroCarousel.vue";
 import ScrollRevealBlocks from "@/components/home/ScrollRevealBlocks.vue";
 import HorizontalPinPanels from "@/components/home/HorizontalPinPanels.vue";

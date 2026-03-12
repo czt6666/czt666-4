@@ -1,6 +1,6 @@
 <template>
     <div class="coming-soon-page">
-        <Header />
+        <AppHeader />
         <main class="coming-soon-main">
             <h1>{{ pageTitle }}</h1>
             <p>该页面还没做好，正在开发中。</p>
@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import Header from "@/components/Header.vue";
+import AppHeader from "@/components/AppHeader.vue";
 
 const route = useRoute();
 const pageTitle = computed(() => String(route.meta.title ?? "页面建设中"));

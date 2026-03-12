@@ -8,7 +8,7 @@
         }"
     >
         <div class="container">
-            <RouterLink to="/portfolio" class="logo" @click="menuOpen = false">作品集</RouterLink>
+            <RouterLink to="/" class="logo" @click="menuOpen = false">首页</RouterLink>
             <button
                 type="button"
                 class="menu-trigger"
@@ -21,9 +21,9 @@
                 <span class="line" />
             </button>
             <nav class="right" :aria-hidden="!menuOpen">
-                <RouterLink to="/frontend-works" @click="menuOpen = false">前端作品</RouterLink>
-                <RouterLink to="/travel-journey" @click="menuOpen = false">旅游经历</RouterLink>
-                <RouterLink to="/photo-wall" @click="menuOpen = false">照片墙</RouterLink>
+                <RouterLink to="/works" @click="menuOpen = false">前端作品</RouterLink>
+                <RouterLink to="/trip" @click="menuOpen = false">旅游经历</RouterLink>
+                <RouterLink to="/photos" @click="menuOpen = false">照片墙</RouterLink>
                 <a
                     href="https://czt666.cn"
                     class="old-version"
@@ -37,7 +37,7 @@
                 </a>
             </nav>
         </div>
-        <div class="nav-overlay" aria-hidden="true" @click="menuOpen = false" />
+        <div class="nav-overlay" aria-hidden="true" @click="menuOpen = false"></div>
     </header>
 </template>
 
