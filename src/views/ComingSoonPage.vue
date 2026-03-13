@@ -4,18 +4,27 @@
         <main class="coming-soon-main">
             <h1>{{ pageTitle }}</h1>
             <p>该页面还没做好，正在开发中。</p>
-            <RouterLink to="/" class="back-home">返回首页</RouterLink>
+            <button type="button" class="back-home" @click="goBack">返回上一页</button>
         </main>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import AppHeader from "@/components/AppHeader.vue";
 
 const route = useRoute();
+const router = useRouter();
 const pageTitle = computed(() => String(route.meta.title ?? "页面建设中"));
+
+function goBack() {
+    if (window.history.length > 1) {
+        router.back();
+    } else {
+        router.replace("/");
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -52,7 +61,8 @@ const pageTitle = computed(() => String(route.meta.title ?? "页面建设中"));
     padding: 10px 18px;
     border-radius: 999px;
     color: #fff;
-    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
     background: rgba(255, 255, 255, 0.14);
     border: 1px solid rgba(255, 255, 255, 0.28);
     transition: background-color 0.2s ease;

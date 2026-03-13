@@ -51,7 +51,7 @@
 import AppHeader from "@/components/AppHeader.vue";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
 
-const MAP_BASE = "https://czt666.cn/map";
+const MAP_BASE = "https://czt666.cn/map/";
 
 type Destination = {
     key: string;
@@ -71,7 +71,7 @@ const destinations: Destination[] = [
         desc: "雪山、草原、戈壁，昼夜温差带来的色彩变化",
         imageCount: 12,
         viewAllPath: "/trip/xinjiang",
-        mapQuery: "xinjiang",
+        mapQuery: "if=xj",
     },
     {
         key: "2guangxi",
@@ -79,7 +79,7 @@ const destinations: Destination[] = [
         desc: "喀斯特山水、海岸线、云海，云雾与流光交织",
         imageCount: 12,
         viewAllPath: "/trip/guangxi",
-        mapQuery: "guangxi",
+        mapQuery: "if=gx",
     },
     {
         key: "3neimeng",
@@ -87,7 +87,7 @@ const destinations: Destination[] = [
         desc: "星空、草原与沙地，地平线拉得很长。",
         imageCount: 12,
         viewAllPath: "/trip/neimeng",
-        mapQuery: "neimeng",
+        mapQuery: "if=nm",
     },
     {
         key: "4hongkong",
@@ -95,7 +95,7 @@ const destinations: Destination[] = [
         desc: "山城、海湾、城市夜景，立体的城市切片。",
         imageCount: 12,
         viewAllPath: "/trip/hongkong",
-        mapQuery: "hongkong",
+        mapQuery: "if=hk",
     },
 ];
 

@@ -3,7 +3,7 @@
         <div v-for="panel in seasonPanels" :key="panel.key" class="panel" :class="panel.className">
             <div class="grid">
                 <div
-                    v-for="(image, imageIndex) in panel.images"
+                    v-for="image in panel.images"
                     :key="`${panel.key}-${image.position}`"
                     class="cell"
                     v-lazy-image:bg="image.src"
@@ -21,7 +21,10 @@
 <script lang="ts" setup>
 import { onMounted, inject, computed } from "vue";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { resolveStaticAssetUrl } from "@/composables/resolveStaticAssetUrl";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const isMobile = inject<Ref<boolean>>("isMobile");
 const seasonBasePath = "5beijing";
@@ -107,6 +110,15 @@ onMounted(() => {
                 inertia: false,
             },
             end: getEnd,
+            onRefresh(self) {
+                const trigger = self.trigger;
+                if (!trigger) return;
+                const spacer = trigger.parentElement;
+                if (spacer?.classList?.contains("pin-spacer")) {
+                    const w = trigger.getBoundingClientRect().width;
+                    spacer.style.width = `${w - 1}px`;
+                }
+            },
         },
     });
 });

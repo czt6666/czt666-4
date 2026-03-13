@@ -174,7 +174,7 @@ const works = computed<WorkCard[]>(() => {
     gap: 20px;
 
     @include mobile {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px;
     }
 }
@@ -198,11 +198,16 @@ const works = computed<WorkCard[]>(() => {
 
     @include mobile {
         min-height: 0;
-        padding: 18px 16px;
-        border-radius: 14px;
-        background:
-            linear-gradient(90deg, rgba(89, 127, 255, 0.24) 0 5px, transparent 5px),
-            rgba(10, 15, 28, 0.84);
+        padding: 14px 10px;
+        border-radius: 12px;
+        background: rgba(10, 15, 28, 0.84);
+        transition: none;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: rgba(180, 203, 255, 0.24);
+        }
     }
 
     &::before {
@@ -243,7 +248,7 @@ const works = computed<WorkCard[]>(() => {
 .cover {
     display: block;
     width: 100%;
-    height: 178px;
+    aspect-ratio: 3 / 2; // PC 横板
     object-fit: cover;
     border-radius: 12px;
     margin-bottom: 14px;
@@ -252,12 +257,18 @@ const works = computed<WorkCard[]>(() => {
     transition: transform 0.35s ease;
 
     @include mobile {
-        height: 210px;
+        aspect-ratio: 2 / 3; // 移动端竖版
     }
 }
 
 .work-card:hover .cover {
     transform: scale(1.03);
+}
+
+@include mobile {
+    .work-card:hover .cover {
+        transform: none;
+    }
 }
 
 .work-index {
