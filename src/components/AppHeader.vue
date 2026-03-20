@@ -25,7 +25,7 @@
                 <RouterLink to="/trip" @click="menuOpen = false">旅游经历</RouterLink>
                 <RouterLink to="/photos" @click="menuOpen = false">照片墙</RouterLink>
                 <a
-                    href="https://czt666.cn"
+                    href="https://czt666.cn/v2"
                     class="old-version"
                     title="旧版"
                     target="_blank"

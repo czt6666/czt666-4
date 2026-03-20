@@ -37,25 +37,25 @@ const routes = [
     {
         path: "/works",
         name: "FrontendWorksPage",
-        component: FrontendWorksPage,
+        component: () => import("../views/FrontendWorksPage.vue"),
         meta: { title: "前端作品" },
     },
     {
         path: "/trip",
         name: "TravelJourneyPage",
-        component: TravelJourneyPage,
+        component: () => import("../views/TravelJourneyPage.vue"),
         meta: { title: "旅游经历" },
     },
     {
         path: "/trip/:key",
         name: "TravelJourneyDetailPage",
-        component: ComingSoonPage,
+        component: () => import("../views/ComingSoonPage.vue"),
         meta: { title: "旅游详情" },
     },
     {
         path: "/photos",
         name: "PhotoWallPage",
-        component: PhotoWallPage,
+        component: () => import("../views/PhotoWallPage.vue"),
         meta: { title: "照片墙" },
     },
     {
